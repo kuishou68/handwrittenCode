@@ -359,7 +359,6 @@ Function.prototype.myBind = function(context=window, ...args){
     return fBound;
 }
 
-
 // 测试
 var obj = {
     x: 42,
@@ -647,5 +646,4 @@ Promise.all = function(promises){
         }
     })
 }
-
 
