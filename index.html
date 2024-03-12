@@ -9,32 +9,31 @@
     <script>
         class EventEmiter {
             constructor(){
-                this.message = {};
+                this.events = {};
             }
-            on(type, fn){
-                if(!this.message[type]){
-                    this.message[type] = [];
+            on(eventName, fn){
+                if(!this.events[eventName]){
+                    this.events[eventName] = [];
                 }
-                this.message[type].push(fn);
+                this.events[eventName].push(fn);
             }
-            off(type, fn){
-                if(!this.message[type]){
+            off(eventName, fn){
+                if(!this.events[eventName]){
                     return;
                 }
                 if(!fn){
-                    this.message[type] = undefined;
+                    this.events[eventName] = undefined;
                     return;
                 }
-                this.message[type] = this.message[type].filter((item) =>  item !== fn )
+                this.events[eventName] = this.events[eventName].filter((item) =>  item !== fn )
             }
-            emit(type){
-                // 没有订阅直接return
-                if(this.message[type]){
+            emit(eventName, ...args){
+                // 没有订阅，直接return
+                if(!this.events[eventName]){
                     return;
                 }
-                this.message[type].forEach((item) => {
-                    item();
-                })
+                // 开始发布消息
+                this.events[eventName].forEach((item) => item(...args))
             }
         }
 
@@ -68,7 +67,7 @@
 
         console.log(eventEmitter);
 
-        
+
 
         // const person = new EventEmiter();
 
