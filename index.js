@@ -647,3 +647,37 @@ Promise.all = function(promises){
     })
 }
 
+/**
+ * reduce 方法实现
+ *
+ */
+// 哔哩哔哩
+Array.prototype.myReduce1 = function(fn, init){
+    if(Object.prototype.toString.call(fn) !== "[object Function'"){
+        return;
+    }
+    let arr = Array.prototype.slice.call(this);
+    // 开始循环位置，取决于是否传入第二个参数
+    let initIndex = arguments.length === 1 ? 1 : 0; // 数组遍历项
+    let acc = arguments.length === 1 ? arr[0] : init; // 累加器
+
+    for(let i = initIndex; i < arr.length; i++){
+        acc =  fn(acc, arr[i], i, arr)
+    }
+    return acc;
+}
+
+Array.prototype.myReduce1 = function(fn, initValue){
+    if(Object.prototype.toString.call(fn) != "[object Function]"){
+        return;
+    }
+    let arr = Array.prototype.slice.call(this);
+    // 开始循环的位置
+    let initIndex = arguments.length === 1 ? 1 : 0;
+    let acc = arguments.length === 1 ? arr[0] : initValue;
+
+    for(let i = 0; i < arr.length; i++){
+        acc = fn(arr, arr[i], i, arr)
+    }
+    return arr;
+}
