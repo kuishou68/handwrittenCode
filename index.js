@@ -23,7 +23,7 @@ const debounce = (func, wait=50) => {
  *  -------------------------------------------节流-------------------------------------------
  * @returns {(function(...[*]): void)|*}
  */
-const throttle = () => {
+const throttle = (func, wait=50) => {
     // 上一次执行时间
     let lastTime = 0;
     return function(...args){
@@ -648,11 +648,36 @@ Promise.all = function(promises){
 }
 
 /**
+ * -------------------------------------------实现promise.race-------------------------------------------
+ * 只要有一个promise执行完，直接返回
+ */
+Promise.race = function(promises) {
+    return new Promise((resolve, reject) => {
+        let len = promises.length;
+        if(len === 0) return;
+        for(let i = 0; i < len; i++) {
+            Promise.resolve(promise[i]).then(data => {
+                resolve(data);
+                return;
+            }).catch(err => {
+                reject(err);
+                return;
+            })
+        }
+    })
+}
+
+/**
+ * -------------------------------------------实现async/await-------------------------------------------
+ * 核心：传递给我一个Generator函数，把函数中的内容基于Iterator迭代器的特点一步步的执行
+ */
+
+/**
  * reduce 方法实现
  *
  */
 // 哔哩哔哩
-Array.prototype.myReduce1 = function(fn, init){
+Array.prototype.myReduce = function(fn, init){
     if(Object.prototype.toString.call(fn) !== "[object Function'"){
         return;
     }
@@ -667,17 +692,28 @@ Array.prototype.myReduce1 = function(fn, init){
     return acc;
 }
 
-Array.prototype.myReduce1 = function(fn, initValue){
-    if(Object.prototype.toString.call(fn) != "[object Function]"){
-        return;
-    }
+Array.prototype.myReduce = function(fn, init){
     let arr = Array.prototype.slice.call(this);
-    // 开始循环的位置
-    let initIndex = arguments.length === 1 ? 1 : 0;
-    let acc = arguments.length === 1 ? arr[0] : initValue;
+    // 开始循环位置，取决于是否传入第二个参数
+    let initIndex = arguments.length === 1 ? 1 : 0; // 数组遍历项
+    let acc = arguments.length === 1 ? arr[0] : init; // 累加器
 
-    for(let i = 0; i < arr.length; i++){
-        acc = fn(arr, arr[i], i, arr)
+    for(let i = initIndex; i < arr.length; i++){
+        acc =  fn(acc, arr[i], i, arr)
     }
-    return arr;
+    return acc;
 }
+
+// 测试用例
+const array = [15, 16, 17, 18, 19];
+
+function reducer(accumulator, currentValue, index) {
+    const returns = accumulator + currentValue;
+    console.log(
+        `accumulator: ${accumulator}, currentValue: ${currentValue}, index: ${index}, returns: ${returns}`,
+    );
+    return returns;
+}
+
+const result = array.myReduce(reducer);
+console.log("result", result);
