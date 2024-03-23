@@ -543,7 +543,6 @@ class MyPromiseClass {
     }
 }
 
-
 // 函数编写方式
 function MyPromiseFunction(constructor) {
     let self = this;
@@ -656,7 +655,7 @@ Promise.race = function(promises) {
         let len = promises.length;
         if(len === 0) return;
         for(let i = 0; i < len; i++) {
-            Promise.resolve(promise[i]).then(data => {
+            Promise.resolve(promises[i]).then(data => {
                 resolve(data);
                 return;
             }).catch(err => {
@@ -704,6 +703,20 @@ Array.prototype.myReduce = function(fn, init){
     return acc;
 }
 
+Array.prototype.myReduce1 = function(func, init){
+    let arr = Array.prototype.slice.call(this);
+    // 开始循环的位置
+    let initIndex = arguments.length === 1 ? 1 : 0;
+    // 传入默认参数，默认取值
+    let acc = arguments.length === 1 ? arr[0] : init;
+
+    // 循环计算
+    for(let i = initIndex; i < arr.length; i++){
+        acc = func(acc, arr[i], i, arr)
+    }
+    return acc;
+}
+
 // 测试用例
 const array = [15, 16, 17, 18, 19];
 
@@ -717,3 +730,28 @@ function reducer(accumulator, currentValue, index) {
 
 const result = array.myReduce(reducer);
 console.log("result", result);
+
+
+/**
+ * -------------------------------------------ES6的 Object.create-------------------------------------------
+ * Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的 __proto__
+ */
+function create(proto){
+    function F(){}
+    F.prototype = proto;
+    return new F();
+}
+
+/**
+ * -------------------------------------------ES6的 Object.is-------------------------------------------
+ * OObject.is不会转换被比较的两个值的类型，这点和===更为相似，他们之间也存在一些区别
+ * NaN在===中是不相等的，而在Object.is中是相等的
+ * +0和-0在===中是相等的，而在Object.is中是不相等的
+ */
+Object.is = function(x, y){
+    if(x === y){
+        return x !== 0 || 1 / x === 1 / y;
+    }
+    return x !== x && y !== y;
+}
+
