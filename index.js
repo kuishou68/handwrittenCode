@@ -671,48 +671,108 @@ Promise.race = function(promises) {
  * 核心：传递给我一个Generator函数，把函数中的内容基于Iterator迭代器的特点一步步的执行
  */
 
+
 /**
- * reduce 方法实现
- *
+ * -------------------------------------------ES6的 Object.create-------------------------------------------
+ * Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的 __proto__
  */
-// 哔哩哔哩
-Array.prototype.myReduce = function(fn, init){
-    if(Object.prototype.toString.call(fn) !== "[object Function'"){
-        return;
+
+function create(proto){
+    // 创建一个新函数
+    function F(){}
+    // 将传入的函数挂在新函数原型上
+    F.prototype = proto;
+    // 返回合并之后的新函数
+    return new F();
+}
+
+/**
+ * -------------------------------------------ES6的 Object.is-------------------------------------------
+ * OObject.is不会转换被比较的两个值的类型，这点和===更为相似，他们之间也存在一些区别
+ * NaN在===中是不相等的，而在Object.is中是相等的
+ * +0和-0在===中是相等的，而在Object.is中是不相等的
+ */
+Object.is = function(x, y){
+    // x === y 的情况，判断+0 和-0
+    if(x === y){
+        // 1/+0为正无穷，1/-0 为负无穷
+        return x !== 0 || 1/x === 1/y;
     }
+    // x !== y，判断NaN
+    return x !== x && y !== y;
+}
+
+/**
+ * -------------------------------------------forEach-------------------------------------------
+ */
+Array.prototype.myForEach = function(callback, context=window){
+    for(let i = 0; i < this.length; i++){
+         // 入参必须为函数，同时返回第一项为item，第二项为index
+        typeof callback == 'function' && callback.call(context, this[i], i)
+    }
+}
+
+/**
+ * -------------------------------------------find-------------------------------------------
+ */
+Array.prototype.myFind = function(callback){
+    for(let i = 0; i < this.length; i++){
+        if(callback(this[i], i)){
+            return this[i]
+        }
+    }
+}
+
+/**
+ * -------------------------------------------findIndex-------------------------------------------
+ */
+Array.prototype.myFindIndex = function(callback){
+    for(let i = 0; i < this.length; i++){
+        if(callback(this[i], i)){
+            return i;
+        }
+    }
+}
+
+/**
+ * -------------------------------------------filter-------------------------------------------
+ */
+Array.prtotype.myFilter = function(callback, context=window){
+    let arr = Array.prototype.slice.call(this);
+    let newArr = [];
+    for(let i = 0; i < arr.length; i++){
+        if(callback.apply(context, [arr[i], i, this])){
+            newArr.push(arr[i])
+        }
+    }
+    return newArr;
+}
+
+/**
+ * -------------------------------------------map-------------------------------------------
+ */
+Array.prototype.myMap = function(callback, context=window){
+    let arr = Array.prototype.slice.call(this);
+    let newArr = [];
+    for(let i = 0; i < arr.length; i++){
+        let item = callback.call(context, arr[i], i, this)
+        if(item){
+            newArr.push(item);
+        }
+    }
+    return newArr;
+}
+
+/**
+ * -------------------------------------------reduce-------------------------------------------
+ */
+Array.prototype.myReduce = function(callback, init){
     let arr = Array.prototype.slice.call(this);
     // 开始循环位置，取决于是否传入第二个参数
     let initIndex = arguments.length === 1 ? 1 : 0; // 数组遍历项
-    let acc = arguments.length === 1 ? arr[0] : init; // 累加器
-
+    let acc = arguments.length === 1 ? arr[0] : init;// 累加器
     for(let i = initIndex; i < arr.length; i++){
-        acc =  fn(acc, arr[i], i, arr)
-    }
-    return acc;
-}
-
-Array.prototype.myReduce = function(fn, init){
-    let arr = Array.prototype.slice.call(this);
-    // 开始循环位置，取决于是否传入第二个参数
-    let initIndex = arguments.length === 1 ? 1 : 0; // 数组遍历项
-    let acc = arguments.length === 1 ? arr[0] : init; // 累加器
-
-    for(let i = initIndex; i < arr.length; i++){
-        acc =  fn(acc, arr[i], i, arr)
-    }
-    return acc;
-}
-
-Array.prototype.myReduce1 = function(func, init){
-    let arr = Array.prototype.slice.call(this);
-    // 开始循环的位置
-    let initIndex = arguments.length === 1 ? 1 : 0;
-    // 传入默认参数，默认取值
-    let acc = arguments.length === 1 ? arr[0] : init;
-
-    // 循环计算
-    for(let i = initIndex; i < arr.length; i++){
-        acc = func(acc, arr[i], i, arr)
+        acc = callback(acc, arr[i], i, arr)
     }
     return acc;
 }
@@ -731,27 +791,72 @@ function reducer(accumulator, currentValue, index) {
 const result = array.myReduce(reducer);
 console.log("result", result);
 
-
 /**
- * -------------------------------------------ES6的 Object.create-------------------------------------------
- * Object.create()方法创建一个新对象，使用现有的对象来提供新创建的对象的 __proto__
- */
-function create(proto){
-    function F(){}
-    F.prototype = proto;
-    return new F();
-}
-
-/**
- * -------------------------------------------ES6的 Object.is-------------------------------------------
- * OObject.is不会转换被比较的两个值的类型，这点和===更为相似，他们之间也存在一些区别
- * NaN在===中是不相等的，而在Object.is中是相等的
- * +0和-0在===中是相等的，而在Object.is中是不相等的
- */
-Object.is = function(x, y){
-    if(x === y){
-        return x !== 0 || 1 / x === 1 / y;
+ * -------------------------------------------every-------------------------------------------
+ * every() 方法测试一个数组内的所有元素是否都能通过指定函数的测试。它返回一个布尔值
+ * */
+Array.prototype.myEvery = function(callback, context=window){
+    let arr = Array.prototype.slice.call(this);
+    let falg = true;
+    for(let i = 0; i < arr.length; i++){
+        if(!callback.apply(context, [arr[i], i, this])){
+            falg = false;
+            break;
+        }
     }
-    return x !== x && y !== y;
+    return falg;
 }
 
+/**
+ * -------------------------------------------some-------------------------------------------
+ * some() 方法测试数组中是否至少有一个元素通过了由提供的函数实现的测试。
+ * 如果在数组中找到一个元素使得提供的函数返回 true，则返回 true；否则返回 false。它不会修改数组。
+ * */
+Array.prototype.mySome = function(callback, context=window){
+    let arr = Array.prototype.slice.call(this);
+    let falg = false;
+    for(let i = 0; i < arr.length; i++){
+        if(callback.apply(context, [arr[i], i, this])){
+            falg = true;
+            break;
+        }
+    }
+    return falg;
+}
+
+/**
+ * -------------------------------------------flat-------------------------------------------
+ * flat() 方法创建一个新的数组，并根据指定深度递归地将所有子数组元素拼接到新的数组中。
+ * 递归处理 depth 指定要提取嵌套数组的结构深度，默认值为 1。
+ */
+Array.prototype.myFlag = function(depth){
+    let result = []; //结果数组
+    let fn = function(arr){
+        for(let i = 0; i < arr.length; i++){
+            // 是数组进行递归
+            if(Array.isArray(arr[i])){
+                fn(arr[i])
+            } else {
+                // 不是则添加到结果数组中
+                result.push(arr[i])
+            }
+        }
+    }
+    return result;
+}
+
+// 扩展运算符写法
+Array.prototype.myFlag1 = function(depth){
+    while(arr.some(Array.isArray)){
+        arr = [].concat(...arr);
+    }
+}
+
+/**
+ * -------------------------------------------Array.isArray-------------------------------------------
+ * Array.isArray() 静态方法用于确定传递的值是否是一个数组。
+ */
+Array.myArray = function(val){
+    // 调用顶级对象上的toString方法转换成[object Array]形式
+    return Object.prototype.toString.call(val) === '[object Array]';
+}
