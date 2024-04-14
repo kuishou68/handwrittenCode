@@ -1,5 +1,6 @@
 /**
  * -------------------------------------------防抖-------------------------------------------
+ *  固定时间后再执行某一事件，如果在固定时间内重复触发，则重新计时
  * @param func
  * @param wait
  * @returns {(function(...[*]): void)|*}
@@ -19,8 +20,10 @@ const debounce = (func, wait=50) => {
      }
 }
 
+
 /**
  *  -------------------------------------------节流-------------------------------------------
+ * 固定时间内只执行一次，如果在固定时间内重复执行，只有一次生效
  * @returns {(function(...[*]): void)|*}
  */
 const throttle = (func, wait=50) => {
@@ -36,6 +39,8 @@ const throttle = (func, wait=50) => {
          }
     }
 }
+
+
 
 /**
  * -------------------------------------------发布订阅模式-------------------------------------------
@@ -95,7 +100,6 @@ event.off('login',login1) // 解除订阅
 event.emit('login', 1,2,3,4,5)
 event.emit('login', 6,7,8,9)
 event.emit('login', 10,11,12)
-
 
 // 简易写法
 class EventEmiter {
@@ -196,6 +200,8 @@ student.attach(teacher);
 student.setState('被欺负了');
 
 
+
+
 /**
  * -------------------------------------------实现call方法：-------------------------------------------
  *
@@ -251,7 +257,6 @@ Function.prototype.myCall = function(context=window, ...args){
     delete context[fnKey];
     return result;
 }
-
 
 //用法：f.call(this,arg1)
 function f(a,b){
@@ -358,6 +363,7 @@ Function.prototype.myBind = function(context=window, ...args){
     fBound.prototype = Object.create(this.prototype)
     return fBound;
 }
+
 
 // 测试
 var obj = {
@@ -582,6 +588,34 @@ MyPromiseFunction.prototype.then = function(onFulfilled, onRejected) {
     }
 }
 
+function MyPromise(constructor){
+    let self = this;
+    self.state = "pending"
+    self.resolvedValue = undefined;
+    self.rejectedValue = undefined;
+
+    resolve(value){
+        if(self.state === "pendng"){
+            self.state = 'resolved';
+            self.resolvedState = value;
+        }
+    }
+
+    reject(value){
+        if(self.state === "pending"){
+            self.state = "rejected";
+            self.rejectedValue = value;
+        }
+    }
+
+    // 异常处理
+    try{
+        constructor(resolve, reject);
+    } catch(e){
+        reject(e)
+    }
+}
+
 var p = new MyPromiseFunction(function(resolve,reject) {
     resolve(1)
 });
@@ -646,6 +680,7 @@ Promise.all = function(promises){
     })
 }
 
+
 /**
  * -------------------------------------------实现promise.race-------------------------------------------
  * 只要有一个promise执行完，直接返回
@@ -686,9 +721,10 @@ function create(proto){
     return new F();
 }
 
+
 /**
  * -------------------------------------------ES6的 Object.is-------------------------------------------
- * OObject.is不会转换被比较的两个值的类型，这点和===更为相似，他们之间也存在一些区别
+ * Object.is不会转换被比较的两个值的类型，这点和===更为相似，他们之间也存在一些区别
  * NaN在===中是不相等的，而在Object.is中是相等的
  * +0和-0在===中是相等的，而在Object.is中是不相等的
  */
@@ -701,6 +737,7 @@ Object.is = function(x, y){
     // x !== y，判断NaN
     return x !== x && y !== y;
 }
+
 
 /**
  * -------------------------------------------forEach-------------------------------------------
@@ -840,10 +877,26 @@ Array.prototype.myFlag = function(depth){
                 // 不是则添加到结果数组中
                 result.push(arr[i])
             }
-        }
+        })
     }
     return result;
 }
+
+// forEach 会自动去除空格
+const eachFlat = (arr = [], depth = 1) => {
+    const result = []; 
+    (function flat(arr, depth) {
+      arr.forEach((item) => {
+        if (Array.isArray(item) && depth > 0) {
+          flat(item, depth - 1)
+        } else {
+          result.push(item)
+        }
+      })
+    })(arr, depth)
+    return result;
+ }
+
 
 // 扩展运算符写法
 Array.prototype.myFlag1 = function(depth){
@@ -860,3 +913,43 @@ Array.myArray = function(val){
     // 调用顶级对象上的toString方法转换成[object Array]形式
     return Object.prototype.toString.call(val) === '[object Array]';
 }
+
+
+/**
+ * -------------------------------------------Proxy-------------------------------------------
+ * 
+ */
+function chain(value) {
+    const handler = {
+        get: function(obj, prop){
+            if(prop === "end"){
+                return obj.value;
+            }
+            if(typeof window[prop] === "function"){
+                obj.value = window[prop](obj.value);
+                return proxy;
+            }
+            return obj[prop];
+        }
+    };
+    const proxy = new Proxy({value}, handler);
+    return proxy;
+}
+// 测试用例
+function increase(val){
+    return val + 1;
+}
+function decrease(val){
+    return val - 1;
+}
+function double(val){
+    return val * 2;
+}
+let test1 = chain(3).increase.double.end;
+console.log(test1);
+
+
+/**
+ * -------------------------------------------冒泡排序-------------------------------------------
+ * 
+ */
