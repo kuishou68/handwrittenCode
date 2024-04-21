@@ -953,3 +953,98 @@ console.log(test1);
  * -------------------------------------------冒泡排序-------------------------------------------
  * 
  */
+
+
+/**
+ * -------------------------------------------二数之和-------------------------------------------
+ * 
+ */
+var twoSum = function(nums, target) {
+    let res = []
+    let len = nums.length;
+    let map = new Map();
+    if(nums.length < 2) return res
+    for(let i = 0; i < len; i++){
+        let diff = target - nums[i];
+        if(map.has(diff)){
+            return [map.get(diff), i]
+        }
+        map.set(nums[i], i)
+    }
+};
+
+/**
+ * -------------------------------------------三数之和-------------------------------------------
+ * 
+ */
+var threeSum = function(nums) {
+    let res = [];
+    let len = nums.length;
+    if(len < 3) return res;
+    nums.sort((a,b) => a-b);
+    for(let i = 0; i < len-2; i++){
+        if(i > 0 && nums[i] === nums[i-1]) continue;
+        let l = i+1;
+        let r = len-1;
+        while(l<r){
+            let sum = nums[i] + nums[l] + nums[r];
+            let ans = [nums[i], nums[l], nums[r]];
+            if(sum === 0){
+                res.push(ans);
+                while(l<r && nums[l] === nums[l+1]) l++;
+                while(l<r && nums[r] === nums[r-1]) r--;
+                l++;
+                r--;
+            } else if(sum < 0){
+                l++;
+            } else if(sum > 0){
+                r--;
+            }
+        }
+    }
+    return res;
+};
+/**
+ * -------------------------------------------四数之和-------------------------------------------
+ * 
+ */
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[][]}
+ */
+var  fourSum = function(nums, target){
+    let res = [];
+    let len = nums.length;
+    if(len < 4) return res;
+    nums.sort((a,b) => a-b);
+    for(let i = 0; i < len - 3; i++){
+        // 当前数大于目标数，直接结束整个循环
+        if(nums[i] > 0 && nums[i] > target) break;
+        // 重复性跳过本次循环
+        if(i > 0 && nums[i] === nums[i-1]) continue;
+        for(let j = i+1; j < len - 2; j++){
+            let x = nums[i] + nums[j];
+            if( x > 0 && x > target) break;
+            if(j > i+1 && nums[j] === nums[j-1]) continue;
+            let l = j+1;
+            let r = len-1;
+            while (l < r) {
+                let sum = nums[i] + nums[j] + nums[l] + nums[r];
+                let ans = [nums[i], nums[j], nums[l], nums[r]];
+                if(sum === target){
+                    res.push(ans);
+                    while(l < r && nums[l] === nums[l + 1]) l++;
+                    while(l < r && nums[r] === nums[r - 1]) r--;
+                    l++;
+                    r--;
+                } else if(sum < target){
+                    l++;
+                } else if(sum > target){
+                    r--;
+                }
+            }
+        }
+    }
+    return res;
+}
