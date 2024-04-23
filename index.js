@@ -866,7 +866,7 @@ Array.prototype.mySome = function(callback, context=window){
  * flat() 方法创建一个新的数组，并根据指定深度递归地将所有子数组元素拼接到新的数组中。
  * 递归处理 depth 指定要提取嵌套数组的结构深度，默认值为 1。
  */
-Array.prototype.myFlag = function(depth){
+Array.prototype.myFlag = function(depth=1){
     let result = []; //结果数组
     let fn = function(arr){
         for(let i = 0; i < arr.length; i++){
@@ -877,9 +877,23 @@ Array.prototype.myFlag = function(depth){
                 // 不是则添加到结果数组中
                 result.push(arr[i])
             }
-        })
+        }
     }
     return result;
+}
+
+Array.prototype.myFlat1 = function(deep=1){
+    let res = [];
+    deep--;
+    for(let i=0; i<this.length; i++){
+        const item = this[i];
+        if(Array.isArray(item) && deep >=0){
+            res = res.concat(item.myFlat1(deep))
+        } else {
+            res.push(item)
+        }
+    }
+    return res;
 }
 
 // forEach 会自动去除空格
@@ -905,6 +919,8 @@ Array.prototype.myFlag1 = function(depth){
     }
 }
 
+
+
 /**
  * -------------------------------------------Array.isArray-------------------------------------------
  * Array.isArray() 静态方法用于确定传递的值是否是一个数组。
@@ -914,6 +930,55 @@ Array.myArray = function(val){
     return Object.prototype.toString.call(val) === '[object Array]';
 }
 
+/**
+ * -------------------------------------------数组去重-------------------------------------------
+ * 
+ */
+// ES6 的 Set 去重
+function distinct2(arr){
+    return Array.from(new Set(arr));
+}
+
+// Array.filter 配合 includes
+function distinct1(a,b){
+    let arr = a.concat(b);
+    return arr.filter((item) => {
+        return arr.includes(item);
+    })
+}
+
+// reduce
+var arr = [
+    { name: "张三", age: "18" },
+    { name: "张三", age: "19" },
+    { name: "张三", age: "20" },
+    { name: "李四", age: "19" },
+    { name: "王五", age: "20" },
+    { name: "赵六", age: "21" }
+];
+var temp = {};
+arr = arr.resuce((prev, curr) => {
+    if(!temp[curr.name]){
+        temp[curr.name] = true;
+        prev.push(curr);
+    }
+    return prev;
+}, [])
+
+
+// 双层循环
+function distinct(arr){
+    let len = arr.length;
+    for(let i=0; i<len; i++){
+        for(let j=i+1; j<len; j++){
+            if(arr[i] === arr[j]){
+                arr.splice(j, 1); // splice 会改变数组长度 len 和下标j减1
+                len--;
+                j--;
+            }
+        }
+    }
+}
 
 /**
  * -------------------------------------------Proxy-------------------------------------------
@@ -1002,8 +1067,7 @@ var threeSum = function(nums) {
             }
         }
     }
-    return res;
-};
+   
 /**
  * -------------------------------------------四数之和-------------------------------------------
  * 
