@@ -814,6 +814,16 @@ Array.prototype.myReduce = function(callback, init){
     return acc;
 }
 
+Array.prototype.myReduce1 = function(fn, init){
+    let arr = Array.prototype.slice.call(this);
+    let initIndex = arguments.length === 1?1:0;
+    let acc = arguments.length === 1?arr[0]:init;
+    for(let i=0; i<arr.length; i++){
+        acc = fn(acc, arr[i], i, arr)
+    }
+    return acc;
+}
+
 // 测试用例
 const array = [15, 16, 17, 18, 19];
 
@@ -1021,8 +1031,10 @@ console.log(test1);
 
 
 /**
- * -------------------------------------------二数之和-------------------------------------------
- * 
+ * -------------------------------------------两数之和-------------------------------------------
+ * 输入：numbers = [2,7,11,15], target = 9
+ * 输出：[1,2]
+ * 解释：2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 。返回 [1, 2] 。
  */
 var twoSum = function(nums, target) {
     let res = []
@@ -1037,6 +1049,18 @@ var twoSum = function(nums, target) {
         map.set(nums[i], i)
     }
 };
+var twoSum = function(nums, target){
+    let len = nums.length;
+    let map = new Map();
+    if(len < 2) return []
+    for(let i=0; i<len; i++){
+        let diff = target - nums[i];
+        if(map.has(diff)){
+            return [map.get(diff), i]
+        }
+        map.set(nums[diff], i)
+    }
+}
 
 /**
  * -------------------------------------------三数之和-------------------------------------------
@@ -1111,4 +1135,33 @@ var  fourSum = function(nums, target){
         }
     }
     return res;
+}
+
+
+/**
+ * -------------------------------------------平衡二叉树-------------------------------------------
+ * 满足平衡二叉树的条件：
+ * 1.左右子树深度只差的绝对值不超过1；
+ * 2.左右子树也是平衡二叉树；
+ * 
+ * 解题思路： 递归三部曲 后序遍历 左右中 当前左子树和右子树高度只差大于1就返回-1
+ */
+var isBalanced = function (root) {
+    // 1.确定入参以及返回值
+    const getDepth = function (node) {
+        // 2.设置中止条件
+        if(node === null) return 0;
+        // 3.后序遍历，左右子树判断平衡二叉树
+        let leftDepth = getDepth(node.left);
+        if(leftDepth === -1) return -1;
+        let rightDepth = getDepth(node.right);
+        if(rightDepth ===  -1) return -1;
+        // 4.左右子树高度只差绝对值超过1，返回-1
+        if(Math.abs(leftDepth - rightDepth) > 1){
+            return -1;
+        } else {
+            return 1 + Math.max(leftDepth, rightDepth);
+        }
+    }
+    return !(getDepth(root) === -1)
 }
