@@ -1165,3 +1165,21 @@ var isBalanced = function (root) {
     }
     return !(getDepth(root) === -1)
 }
+
+/**
+ * -------------------------------------------二叉树的最小深度-------------------------------------------
+ * 说明：最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+ * 
+ * 解题：只有当左右都为空的时候，才说明遍历的最低点了。如果其中一个为空则不是最低点，继续递归
+ */
+
+var minDepth = function (root) {
+    // 根节点为null，深度为0
+    if(!root) return 0;
+    let left = minDepth(root.left);
+    let right = minDepth(root.right);
+    // 遍历非空子树
+    if(root.left && !root.right) return 1+left;
+    if(!root.left && root.right) return 1+right;
+    return 1+Math.min(left, right);
+}
