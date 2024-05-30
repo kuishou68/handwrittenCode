@@ -40,8 +40,6 @@ const throttle = (func, wait=50) => {
     }
 }
 
-
-
 /**
  * -------------------------------------------发布订阅模式-------------------------------------------
  */
@@ -321,6 +319,20 @@ let obj={
 }
 f.myApply(obj,[1,2])
 
+Function.prototype.myApply = function(context=window, args){
+    // 值类型转对象类型
+    if(typeof context !== 'object'){
+        context = new Object(context)
+    }
+    // Symbol 做key, 绑定this
+    let fnKey = new Symbol();
+    context[fnKey] = this;
+    // 接收参数
+    let result = context[fnKey](...args);
+    //  清空obj上的fnkey属性，防止污染
+    delete context[fnKey];
+    return result;
+}
 
 /**
  * -------------------------------------------实现bind函数：-------------------------------------------
@@ -908,7 +920,7 @@ Array.prototype.myFlat1 = function(deep=1){
 
 // forEach 会自动去除空格
 const eachFlat = (arr = [], depth = 1) => {
-    const result = []; 
+    const result = [];
     (function flat(arr, depth) {
       arr.forEach((item) => {
         if (Array.isArray(item) && depth > 0) {
@@ -942,7 +954,7 @@ Array.myArray = function(val){
 
 /**
  * -------------------------------------------数组去重-------------------------------------------
- * 
+ *
  */
 // ES6 的 Set 去重
 function distinct2(arr){
@@ -992,7 +1004,7 @@ function distinct(arr){
 
 /**
  * -------------------------------------------Proxy-------------------------------------------
- * 
+ *
  */
 function chain(value) {
     const handler = {
@@ -1026,7 +1038,7 @@ console.log(test1);
 
 /**
  * -------------------------------------------冒泡排序-------------------------------------------
- * 
+ *
  */
 
 
@@ -1049,52 +1061,90 @@ var twoSum = function(nums, target) {
         map.set(nums[i], i)
     }
 };
-var twoSum = function(nums, target){
-    let len = nums.length;
-    let map = new Map();
-    if(len < 2) return []
-    for(let i=0; i<len; i++){
-        let diff = target - nums[i];
-        if(map.has(diff)){
-            return [map.get(diff), i]
-        }
-        map.set(nums[diff], i)
-    }
-}
 
-/**
+
+/*
  * -------------------------------------------三数之和-------------------------------------------
- * 
+ *  给你一个整数数组 nums ，判断是否存在三元组 [nums[i], nums[j], nums[k]] 满足 i != j、i != k 且 j != k ，同时还满足 nums[i] + nums[j] + nums[k] == 0 。请
+ *  示例 1：
+    输入：nums = [-1,0,1,2,-1,-4]
+    输出：[[-1,-1,2],[-1,0,1]]
+    解释：
+    nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0 。
+    nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0 。
+    nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
+    不同的三元组是 [-1,0,1] 和 [-1,-1,2] 。
+    注意，输出的顺序和三元组的顺序并不重要。
+
+    示例 2：
+    输入：nums = [0,1,1]
+    输出：[]
+    解释：唯一可能的三元组和不为 0 。
+
+    示例 3：
+    输入：nums = [0,0,0]
+    输出：[[0,0,0]]
+    解释：唯一可能的三元组和为 0 。
  */
 var threeSum = function(nums) {
+    let ans = [];
+    let len = nums.length;
+    if(len < 3) return ans; // 长度不够直接返回空数组
+    nums.sort((a,b) => a-b); // 排序
+    for(let i = 0; i < len; i++){
+        if(nums[i] >0) break; // 当前项大于0，三数之和一定不等于0
+        if(i > 0 && nums[i] === nums[i-1]) continue;
+        let L = i+1;
+        let R = len-1;
+        while(L<R){
+            let sum = nums[i] + nums[L] + nums[R];
+            if(sum === 0){
+                ans.push([nums[i], nums[L], nums[R]]);
+                while(L<R && nums[L] === nums[L+1]) L++;
+                while(L<R && nums[R] === nums[R-1]) R--;
+                L++;
+                R--;
+            } else if(sum < 0){
+                L++;
+            } else if(sum > 0){
+                R--;
+            }
+        }
+    }
+    return ans;
+};
+
+var threeSum = function(nums){
     let res = [];
     let len = nums.length;
     if(len < 3) return res;
     nums.sort((a,b) => a-b);
-    for(let i = 0; i < len-2; i++){
+    for(let i = 0; i < len; i++){
+        if(nums[i] > 0) break;
         if(i > 0 && nums[i] === nums[i-1]) continue;
         let l = i+1;
         let r = len-1;
         while(l<r){
             let sum = nums[i] + nums[l] + nums[r];
-            let ans = [nums[i], nums[l], nums[r]];
             if(sum === 0){
-                res.push(ans);
+                res.push([nums[i], nums[l], nums[r]]);
                 while(l<r && nums[l] === nums[l+1]) l++;
                 while(l<r && nums[r] === nums[r-1]) r--;
                 l++;
                 r--;
-            } else if(sum < 0){
+            } else if(nums < 0){
                 l++;
             } else if(sum > 0){
                 r--;
             }
         }
     }
-   
+    return res;
+}
+
 /**
  * -------------------------------------------四数之和-------------------------------------------
- * 
+ *
  */
 /**
  * @param {number[]} nums
@@ -1143,7 +1193,7 @@ var  fourSum = function(nums, target){
  * 满足平衡二叉树的条件：
  * 1.左右子树深度只差的绝对值不超过1；
  * 2.左右子树也是平衡二叉树；
- * 
+ *
  * 解题思路： 递归三部曲 后序遍历 左右中 当前左子树和右子树高度只差大于1就返回-1
  */
 var isBalanced = function (root) {
