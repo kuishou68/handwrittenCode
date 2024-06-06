@@ -1165,7 +1165,7 @@ var threeSum = function(nums){
  * @param {number} target
  * @return {number[][]}
  */
-var  fourSum = function(nums, target){
+var fourSum = function(nums, target){
     let res = [];
     let len = nums.length;
     if(len < 4) return res;
@@ -1201,43 +1201,41 @@ var  fourSum = function(nums, target){
     return res;
 }
 
-var fourSum = function (nums, target){
+var fourSum = function(nums, target){
     let res = [];
     let len = nums.length;
     if(len < 4) return res;
     nums.sort((a,b) => a-b);
     for(let i = 0; i < len - 3; i++){
-        if(i === 0 || nums[i] > nums[i-1]){
-            let l = i+1;
-            let j = l+1;
-            while(l < len - 2){
-                let r = len - 1;
-                if(l === i+1 || nums[l] > nums[l-1]){
-                    while(i < len - 1 && j < r){
-                        const sum = nums[i] + nums[l] + nums[j] + nums[r];
-                        const ans = [nums[i], nums[l], nums[j], nums[r]];
-                        if(sum === target){
-                            res.push(ans);
-                            j++;
-                            r--;
-                            while(nums[j] === nums[j-1]) j++;
-                            while(nums[r] === nums[r+1]) r--;
-                        } else if(sum < target){
-                            j++;
-                        } else if(sum > target){
-                            r--;
-                        }
-                    }
+        // 当前数大于目标值，直接跳出循环
+        if(nums[i] > 0 && nums[i] > target) break;
+        // 当前项和下一项相同，跳出本次循环
+        if(i >0 && nums[i] === nums[i-1]) continue;
+        for(let j = i+1; j < len -2; j++){
+            let x = nums[i] + nums[j];
+            if(nums[j] > 0 && nums[j] > x) break;
+            if(i > i+1 && nums[j] === nums[j-1]) continue;
+            let l = j+1;
+            let r = len-1;
+            while (l<r){
+                let sum = nums[i] + nums[j] + nums[l] + nums[r];
+                if(sum === target){
+                    let ans = [nums[i], nums[j], nums[l], nums[r]];
+                    res.push(ans);
+                    while(l<r && nums[l] === nums[l+1]) l++;
+                    while(l<r && nums[r] === nums[r-1]) r--;
+                    l++;
+                    r--;
+                } else if(sum < target){
+                    l++;
+                } else if(sum > target){
+                    r--
                 }
-                l++;
-                j=l+1;
             }
         }
     }
     return res;
 }
-
-
 /**
  * -------------------------------------------平衡二叉树-------------------------------------------
  * 满足平衡二叉树的条件：
@@ -1284,4 +1282,56 @@ var minDepth = function (root) {
 
 /**
  * -------------------------------------------二叉树的最大深度-------------------------------------------
+ * 二叉树的 最大深度 是指从根节点到最远叶子节点的最长路径上的节点数。
+ * 示例 1：
+ * 输入：root = [3,9,20,null,null,15,7]
+ * 输出：3
+ *
+ * 示例 2：
+ * 输入：root = [1,null,2]
+ * 输出：2
  */
+var maxDepth = function(root) {
+    if(root === null) return 0;
+    let leftMax = maxDepth(root.left);
+    let rightMax = maxDepth(root.right);
+    return 1 + Math.max(leftMax, rightMax)
+}
+
+
+/**
+ * -------------------------------------------路径总和-------------------------------------------
+ * 给你二叉树的根节点 root 和一个表示目标和的整数 targetSum 。判断该树中是否存在 根节点到叶子节点 的路径，这条路径上所有节点值相加等于目标和 targetSum 。如果存在，返回 true ；否则，返回 false 。
+ *
+ * 叶子节点 是指没有子节点的节点。
+ *
+ * 输入：root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22
+ * 输出：true
+ * 解释：等于目标和的根节点到叶节点路径如上图所示。
+ *
+ * 示例 2：
+ * 输入：root = [1,2,3], targetSum = 5
+ * 输出：false
+ * 解释：树中存在两条根节点到叶子节点的路径：
+ * (1 --> 2): 和为 3
+ * (1 --> 3): 和为 4
+ * 不存在 sum = 5 的根节点到叶子节点的路径。
+ * 示例 3：
+ *
+ * 输入：root = [], targetSum = 0
+ * 输出：false
+ * 解释：由于树是空的，所以不存在根节点到叶子节点的路径。
+ *
+ */
+
+var hasPathSum = function(root, targetSum) {
+    if(root === null){
+        return false;
+    }
+    targetSum -= root.val;
+    if(root.left === root.right){
+        return targetSum === 0;
+    }
+    return hasPathSum(root.left, targetSum) || hasPathSum(root.right, targetSum)
+}
+
