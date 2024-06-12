@@ -1115,33 +1115,7 @@ var threeSum = function(nums) {
     return ans;
 };
 
-var threeSum = function(nums){
-    let ans = [];
-    let len = nums.length;
-    if(len < 3) return ans;
-    nums.sort((a,b) => a-b);
-    for(let i = 0; i<len; i++){
-        if(nums[i] > 0) break;
-        if(i>0 && nums[i] === nums[i-1]) continue;
-        let l = i + 1;
-        let r = len - 1;
-        while(l<r) {
-            let sum = nums[i] + nums[l] + nums[r];
-            if(sum === 0){
-                ans.push([nums[i], nums[l], nums[r]]);
-                while(l < r && nums[l] === nums[l+1]) l++;
-                while(l < r && nums[r] === nums[r-1]) r--;
-                l++;
-                r--;
-            } else if(sum < 0){
-                l++;
-            } else if(sum > 0){
-                r--;
-            }
-        }
-    }
-    return ans;
-}
+
 /**
  * -------------------------------------------四数之和-------------------------------------------
  * 给你一个由 n 个整数组成的数组 nums ，和一个目标值 target 。请你找出并返回满足下述全部条件且不重复的四元组 [nums[a], nums[b], nums[c], nums[d]] （若两个四元组元素一一对应，则认为两个四元组重复）：
@@ -1178,7 +1152,7 @@ var fourSum = function(nums, target){
         for(let j = i+1; j < len - 2; j++){
             let x = nums[i] + nums[j];
             if( x > 0 && x > target) break;
-            if(j > i+1 && nums[j] === nums[j-1]) continue;
+            if( j > i+1 && nums[j] === nums[j-1]) continue;
             let l = j+1;
             let r = len-1;
             while (l < r) {
@@ -1201,41 +1175,6 @@ var fourSum = function(nums, target){
     return res;
 }
 
-var fourSum = function(nums, target){
-    let res = [];
-    let len = nums.length;
-    if(len < 4) return res;
-    nums.sort((a,b) => a-b);
-    for(let i = 0; i < len - 3; i++){
-        // 当前数大于目标值，直接跳出循环
-        if(nums[i] > 0 && nums[i] > target) break;
-        // 当前项和下一项相同，跳出本次循环
-        if(i >0 && nums[i] === nums[i-1]) continue;
-        for(let j = i+1; j < len -2; j++){
-            let x = nums[i] + nums[j];
-            if(nums[j] > 0 && nums[j] > x) break;
-            if(i > i+1 && nums[j] === nums[j-1]) continue;
-            let l = j+1;
-            let r = len-1;
-            while (l<r){
-                let sum = nums[i] + nums[j] + nums[l] + nums[r];
-                if(sum === target){
-                    let ans = [nums[i], nums[j], nums[l], nums[r]];
-                    res.push(ans);
-                    while(l<r && nums[l] === nums[l+1]) l++;
-                    while(l<r && nums[r] === nums[r-1]) r--;
-                    l++;
-                    r--;
-                } else if(sum < target){
-                    l++;
-                } else if(sum > target){
-                    r--
-                }
-            }
-        }
-    }
-    return res;
-}
 /**
  * -------------------------------------------平衡二叉树-------------------------------------------
  * 满足平衡二叉树的条件：
@@ -1333,5 +1272,85 @@ var hasPathSum = function(root, targetSum) {
         return targetSum === 0;
     }
     return hasPathSum(root.left, targetSum) || hasPathSum(root.right, targetSum)
+}
+
+
+/**
+ * -------------------------------------------二叉树的前序遍历-------------------------------------------
+ * 给你二叉树的根节点 root ，返回它节点值的 前序 遍历。
+ *  示例 1：
+ * 输入：root = [1,null,2,3]
+ * 输出：[1,2,3]
+ *
+ *  示例 2：
+ * 输入：root = []
+ * 输出：[]
+ *
+ *  示例 3：
+ * 输入：root = [1]
+ * 输出：[1]
+ *
+ *  示例 4：
+ * 输入：root = [1,2]
+ * 输出：[1,2]
+ *
+ *  示例 5：
+ * 输入：root = [1,null,2]
+ * 输出：[1,2]
+ *
+ *  提示：
+ *  树中节点数目在范围 [0, 100] 内
+ *  -100 <= Node.val <= 100
+ *  进阶：递归算法很简单，你可以通过迭代算法完成吗？
+ *
+ * 解题思路：
+ * 二叉树所谓的序可以理解为父节点的顺序，
+ * 在第一就是前序，在中间就是中序，在最后就是后序；
+ */
+var preorderTraversal = function(root){
+    let res = [];
+    const dfs = function(root){
+        if(root === null) return;
+        //先序遍历所以从父节点开始
+        res.push(root.val);
+        // 递归左右子树
+        dfs(root.left);
+        dfs(root.right);
+    }
+    //只使用一个参数 使用闭包进行存储结果
+    dfs(root);
+    return res;
+}
+
+/**
+ * -------------------------------------------二叉树的后序遍历-------------------------------------------
+ * 给你一棵二叉树的根节点 root ，返回其节点值的 后序遍历 。
+ *
+ *  示例 1：
+ * 输入：root = [1,null,2,3]
+ * 输出：[3,2,1]
+ *
+ *  示例 2：
+ * 输入：root = []
+ * 输出：[]
+ *
+ *  示例 3：
+ * 输入：root = [1]
+ * 输出：[1]
+ *
+ *  提示：
+ *  树中节点的数目在范围 [0, 100] 内
+ *  -100 <= Node.val <= 100
+ */
+var postorderTraversal = function(root){
+    let res = [];
+    const dfs = function(root){
+        if(root === null) return;
+        dfs(root.left);
+        dfs(root.right);
+        res.push(root.val);
+    }
+    dfs(root);
+    return res;
 }
 
