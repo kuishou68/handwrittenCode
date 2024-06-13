@@ -1181,7 +1181,12 @@ var fourSum = function(nums, target){
  * 1.左右子树深度只差的绝对值不超过1；
  * 2.左右子树也是平衡二叉树；
  *
- * 解题思路： 递归三部曲 后序遍历 左右中 当前左子树和右子树高度只差大于1就返回-1
+ * 输入：root = [3,9,20,null,null,15,7]
+ * 输出：true
+ *
+ * 输入：root = [1,2,2,3,3,null,null,4,4] 输出：false
+ *
+ * 解题思路： 后序遍历 左右中 当前左子树和右子树高度只差大于1就返回-1
  */
 var isBalanced = function (root) {
     // 1.确定入参以及返回值
@@ -1203,9 +1208,66 @@ var isBalanced = function (root) {
     return !(getDepth(root) === -1)
 }
 
+
+/**
+ * -------------------------------------------对称二叉树-------------------------------------------
+ * 请设计一个函数判断一棵二叉树是否 轴对称 。
+ *
+ * 实例1：
+ * 输入：root = [6,7,7,8,9,9,8]
+ * 输出：true
+ *
+ * 实例2：
+ * 输入：root = [1,2,2,null,3,null,3]
+ * 输出：false
+ *
+ * 实例3：
+ * 输入：[6,7,7,8,null,8,null]
+ * 输出：false
+ *
+ * 思路：对于二叉树是否对称，要比较的是根节点的左子树与右子树是不是相互翻转的，
+ * 理解这一点就知道了其实我们要比较的是两个树（这两个树是根节点的左右子树），所以在递归遍历的过程中，也是要同时遍历两棵树。
+ */
+var checkSymmetricTree = function(root) {
+    return check(root, root)
+};
+const check = (leftPtr, rightPtr) => {
+    // 如果只有根节点，返回true
+    if (!leftPtr && !rightPtr) return true
+    // 如果左右节点只存在一个，则返回false
+    if (!leftPtr || !rightPtr) return false
+    return leftPtr.val === rightPtr.val && check(leftPtr.left, rightPtr.right) && check(leftPtr.right, rightPtr.left)
+}
+
+/**
+ * -------------------------------------------计算二叉树的深度-------------------------------------------
+ * 某公司架构以二叉树形式记录，请返回该公司的层级数。
+ *
+ * 示例 1：
+ * 输入：root = [1, 2, 2, 3, null, null, 5, 4, null, null, 4]
+ * 输出: 4
+ * 解释: 上面示例中的二叉树的最大深度是 4，沿着路径 1 -> 2 -> 3 -> 4 或 1 -> 2 -> 5 -> 4 到达叶节点的最长路径上有 4 个节点。
+ */
+var calcDepth = function(root){
+    if(root === null) return false;
+    let left = calcDepth(root.left);
+    let right = calcDepth(root.right);
+    return 1+Math.max(left, right);
+}
+
 /**
  * -------------------------------------------二叉树的最小深度-------------------------------------------
  * 说明：最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+ * 说明：叶子节点是指没有子节点的节点。
+ *
+ * 示例 1：
+ * 输入：root = [3,9,20,null,null,15,7]
+ * 输出：2
+ *
+ * 示例 2：
+ * 输入：root = [2,null,3,null,4,null,5,null,6]
+ * 输出：5
+ *
  * 解题：只有当左右都为空的时候，才说明遍历的最低点了。如果其中一个为空则不是最低点，继续递归
  */
 var minDepth = function (root) {
@@ -1237,7 +1299,6 @@ var maxDepth = function(root) {
     return 1 + Math.max(leftMax, rightMax)
 }
 
-
 /**
  * -------------------------------------------路径总和-------------------------------------------
  * 给你二叉树的根节点 root 和一个表示目标和的整数 targetSum 。判断该树中是否存在 根节点到叶子节点 的路径，这条路径上所有节点值相加等于目标和 targetSum 。如果存在，返回 true ；否则，返回 false 。
@@ -1263,17 +1324,16 @@ var maxDepth = function(root) {
  *
  */
 
-var hasPathSum = function(root, targetSum) {
-    if(root === null){
-        return false;
-    }
+var hasPathSum = function(root, targetSum){
+    if(root === null) return false;
+    // 每次递归都减去目标值
     targetSum -= root.val;
+    // 左右子树相等
     if(root.left === root.right){
         return targetSum === 0;
     }
-    return hasPathSum(root.left, targetSum) || hasPathSum(root.right, targetSum)
+    return hasPathSum(root.left, targetSum) || hasPathSum(root.right, targetSum);
 }
-
 
 /**
  * -------------------------------------------二叉树的前序遍历-------------------------------------------
@@ -1354,3 +1414,178 @@ var postorderTraversal = function(root){
     return res;
 }
 
+/**
+ * -------------------------------------------翻转二叉树-------------------------------------------
+ * 给定一棵二叉树的根节点 root，请左右翻转这棵二叉树，并返回其根节点。
+ *
+ * 示例1：
+ * 输入：root = [4,2,7,1,3,6,9]
+ * 输出：[4,7,2,9,6,3,1]
+ *
+ * 示例2：
+ * 输入：root = [2,1,3]
+ * 输出：[2,3,1]
+ * 示例 3：
+ *
+ * 示例3：
+ * 输入：root = []
+ * 输出：[]
+ *
+ * 解题思路：二叉树的先序遍历:根左右，当前节点为空,返回null，交换左右子树
+ *
+ */
+var mirrorTree = function(root) {
+    if(root === null) return null;
+    [[root.left], [root.right]] = [[root.right], [root.left]];
+    mirrorTree(root.left);
+    mirrorTree(root.right);
+    return root;
+};
+
+/**
+ * -------------------------------------------合并二叉树-------------------------------------------
+ * 给你两棵二叉树： root1 和 root2 。
+ * 想象一下，当你将其中一棵覆盖到另一棵之上时，两棵树上的一些节点将会重叠（而另一些不会）。你需要将这两棵树合并成一棵新二叉树。
+ * 合并的规则是：如果两个节点重叠，那么将这两个节点的值相加作为合并后节点的新值；否则，不为 null 的节点将直接作为新二叉树的节点。
+ * 返回合并后的二叉树。
+ *
+ * 注意: 合并过程必须从两个树的根节点开始。
+ *
+ * 示例 1：
+ * 输入：root1 = [1,3,2,5], root2 = [2,1,3,null,4,null,7]
+ * 输出：[3,4,5,5,4,null,7]
+ *
+ * 输入：root1 = [1], root2 = [1,2]
+ * 输出：[2,2]
+ */
+var mergeTrees = function(root1, root2) {
+    // 返回有值的数
+    if(root1 === null) return root2;
+    if(root2 === null) return root1;
+    // 合并节点
+    root1.val += root2.val;
+    // 遍历左右子节点
+    root1.left = mergeTrees(root1.left, root2.left);
+    root1.right = mergeTrees(root1.right, root2.right);
+    return root1;
+};
+
+/**
+ * -------------------------------------------二叉树的最近公共祖先-------------------------------------------
+ * 给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+ * 最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+ * 例如，给定如下二叉树: root = [3,5,1,6,2,0,8,null,null,7,4]
+ *
+ * 示例 1:
+ * 输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+ * 输出: 3
+ * 解释: 节点 5 和节点 1 的最近公共祖先是节点 3。
+ *
+ * 示例 2:
+ * 输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+ * 输出: 5
+ * 解释: 节点 5 和节点 4 的最近公共祖先是节点 5。因为根据定义最近公共祖先节点可以为节点本身。
+ *
+ * 思路：lowestCommonAncestor(root, p, q)的功能是找出以root为根节点的两个节点p和q的最近公共祖先。 我们考虑：
+ * 如果p和q分别是root的左右节点，那么root就是我们要找的最近公共祖先
+ * 如果root是None，说明我们在这条寻址线路没有找到，我们返回None表示没找到
+ * 我们继续在左右子树执行相同的逻辑。
+ * 如果左子树没找到，说明在右子树，我们返回lowestCommonAncestor(root.right, p , q)
+ * 如果右子树没找到，说明在左子树，我们返回lowestCommonAncestor(root.left, p , q)
+ * 如果左子树和右子树分别找到一个，我们返回root
+ */
+var lowestCommonAncestor = function(root, p, q) {
+    if(!root || root === p || root === q) return root;
+    // 遍历左右子树
+    const left = lowestCommonAncestor(root, p, q);
+    const right = lowestCommonAncestor(root, p, q);
+    // 查找有值的子树
+    if(!left) return right;
+    if(!right) return left;
+    return root;
+};
+
+/**
+ * -------------------------------------------二叉搜索树的最近公共祖先-------------------------------------------
+ * 给定一个二叉搜索树, 找到该树中两个指定节点的最近公共祖先。
+ * 最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+ * 例如，给定如下二叉搜索树: root = [6,2,8,0,4,7,9,null,null,3,5]
+ * 示例 1:
+ *
+ * 输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+ * 输出: 6
+ * 解释: 节点 2 和节点 8 的最近公共祖先是 6。
+ * 示例 2:
+ *
+ * 输入: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+ * 输出: 2
+ * 解释: 节点 2 和节点 4 的最近公共祖先是 2, 因为根据定义最近公共祖先节点可以为节点本身。
+ */
+var lowestCommonAncestor = function(root, p, q) {
+    // 没有根节点、更节点等于p或者q
+    if(!root || root === p || root === q) return root;
+    // 遍历左右子树
+    const left = lowestCommonAncestor(root.left, p, q);
+    const right = lowestCommonAncestor(root.right, p, q);
+    // 查找有值的子树
+    if(!left) return right;
+    if(!right) return left;
+    return root;
+};
+
+
+/**
+ * -------------------------------------------寻找二叉搜索树中的目标节点-------------------------------------------
+ * 某公司组织架构以二叉搜索树形式记录，节点值为处于该职位的员工编号。请返回第 cnt 大的员工编号。
+ *
+ *  示例 1：
+ * 输入：root = [7, 3, 9, 1, 5], cnt = 2
+ *        7
+ *       / \
+ *      3   9
+ *     / \
+ *    1   5
+ * 输出：7
+ *
+ *
+ *  示例 2：
+ * 输入: root = [10, 5, 15, 2, 7, null, 20, 1, null, 6, 8], cnt = 4
+ *        10
+ *       / \
+ *      5   15
+ *     / \    \
+ *    2   7    20
+ *   /   / \
+ *  1   6   8
+ * 输出: 8
+ *
+ *
+ * 思路：
+ * 其实这题和 230.二叉搜索树中的第 k 小的元素 有点像，就是一个求小一个求大
+ * 首先必要知道的前提基础知识就是，二叉搜索树上的任意一个点，它的左子树上的所有点都比它本身小，右子树则大。
+ * 那么中序遍历（中序遍历就是左中右）的结果，自然就是二叉树上结点的升序排序 —— 方便求第 k 小的数
+ * 那反过来的中序遍历（右中左）自然就是二叉树的降序排序 —— 方便求第 k 大的数
+ *
+ */
+var findTargetNode = function(root, cnt) {
+    let res = [];
+    if(root === null) return false;
+    res.push(root.val);
+    findTargetNode(root.left, cnt);
+    findTargetNode(root.right, cnt);
+    return res.sort((a, b) => b-a).filter((item, index) => { return index+1 == cnt; })
+};
+
+var kthLargest = function (root, k) {
+    const stk = [];
+    while (root !== null || stk.length) {
+        while (root !== null) {
+            stk.push(root); //存中
+            root = root.right; //取右
+        }
+        root = stk.pop(); //取中
+        if (--k === 0) break;
+        root = root.left; //取左
+    }
+    return root.val;
+};
