@@ -20,7 +20,6 @@ const debounce = (func, wait=50) => {
      }
 }
 
-
 /**
  *  -------------------------------------------节流-------------------------------------------
  * 固定时间内只执行一次，如果在固定时间内重复执行，只有一次生效
@@ -39,6 +38,7 @@ const throttle = (func, wait=50) => {
          }
     }
 }
+
 
 /**
  * -------------------------------------------发布订阅模式-------------------------------------------
@@ -177,6 +177,7 @@ class Subject{
     }
 }
 
+
 class Observer{
     constructor(name){
         this.name = name;
@@ -185,6 +186,7 @@ class Observer{
         console.log(this.name, "更新了，当前学生状态为", student.state)
     }
 }
+
 
 // 测试用例
 let student = new Subject('学生');
@@ -307,6 +309,7 @@ Function.prototype.myApply = function(context=window, args){
     delete context[fnKey];
     return result;
 }
+
 
 // 测试用例
 // 使用
@@ -586,6 +589,7 @@ function MyPromiseFunction(constructor) {
         reject(e);
     }
 }
+
 // 添加 then 方法
 MyPromiseFunction.prototype.then = function(onFulfilled, onRejected) {
     let self = this;
@@ -712,6 +716,8 @@ Promise.race = function(promises) {
         }
     })
 }
+
+
 
 /**
  * -------------------------------------------实现async/await-------------------------------------------
@@ -1038,8 +1044,158 @@ console.log(test1);
 
 /**
  * -------------------------------------------冒泡排序-------------------------------------------
- *
+ * 从第一个元素开始，重复比较相邻的两项，小的放前面，大的放后面
+ * 平均时间复杂度 O(n^2)
  */
+function bubbleSort(arr) {
+    let len = arr.length;
+    for(let i = 0; i < len; i++){
+        let flag = false;
+        for(let j = 0; j < len-1; j++){
+            if(arr[j] > arr[j+1]){
+                [arr[j], arr[j+1]] = [arr[j+1], arr[j]]
+                flag = true;
+            }
+        }
+        // 若日一次交互没有发生，则说明数组有序，直接返回
+        if(!flag) return arr;
+    }
+    return arr;
+}
+
+/**
+ * -------------------------------------------选择排序-------------------------------------------
+ * 循环遍历数组，每次都找出当前范围内的最小值，把它放到当前范围的头部；然后缩小排序范围，重复这个过程；
+ * 时间复杂度 O(n^2)
+ */
+function selectSort(arr){
+    let len = arr.length;
+    let minIndex; // 最小值索引
+    for(let i = 0; i < len-1; i++){
+        // 初始化最小索引
+        minIndex = i;
+        for(let j = i; j < len; j++){
+            // 如果当前值小于最小值索引，更新最小值
+            if(arr[j] < arr[minIndex]){
+                minIndex = j
+            }
+        }
+        // 交换位置
+        if(minIndex !== i){
+            [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+        }
+    }
+    return arr;
+}
+
+/**
+ * -------------------------------------------插入排序-------------------------------------------
+ * 前面的元素序列都是有序的，每次向右移动发下比自己大的，就需要为当前元素腾出一个新的位置
+ * 时间复杂度  O(n^2)
+ */
+function insetSort(arr){
+    let len = arr.length;
+    let temp; // 当前需要插入的元素
+    for(let i = 1; i < len; i++){
+        // 寻找自己应该有的定位
+        let j = i;
+        temp = arr[i];
+        // j前面一个元素是否比temp大
+        while(j > 0 && arr[j-1] > temp){
+            // 如果是，则将j前面的一个元素后移一位，为temp让出位置
+            arr[j] = arr[j-1]
+            j--
+        }
+        // 循环让位，最后得到的j就是temp的索引
+        arr[j] = temp
+    }
+    return arr;
+}
+
+
+/**
+ * https://interview.poetries.top/algorithm/algorithm-interview/20-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%8B%EF%BC%89.html#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F
+ * -------------------------------------------归并排序-------------------------------------------
+ * 分治思想，将数组从中间分割为两半，再分割子数组，直到子数组只有一个元素为止；
+ * 将规模为1的子数组两两排序合并为2的子数组；
+ * 时间复杂度 O(n log(n))
+ */
+function mergeSort(arr){
+    let len = arr.length;
+    if(len <= 1) return arr;
+    let mid = Math.floor(len/2); // 分割点
+    let leftArr = mergeSort(arr.slice(0, mid)); // 递归分割左子数组
+    let rightArr = mergeSort(arr.slice(mid, len)); // 递归分割右子数组
+    return mergeArr(leftArr, rightArr);
+}
+
+function mergeArr(leftArr, rightArr){
+    // 初始化两个指针
+    let i=0, j = 0;
+    let res = [];
+    let leftLen = leftArr.length;
+    let rightLen = rightArr.length;
+    // 合并子数组
+    while(i < leftLen && j < rightLen){
+        if(leftArr[i] < rightArr[j]){
+            res.push(leftArr[i])
+            i++;
+        } else {
+            res.push(rightArr[j])
+            j++;
+        }
+    }
+    // 如果其中一个子数组被合并完全，则直接拼接另一个子数组的剩余部分;
+    if(i < leftLen){
+        return res.concat(leftArr.slice(i))
+    } else {
+        return res.concat(rightArr.slice(j))
+    }
+}
+
+
+/**
+ * -------------------------------------------快速排序-------------------------------------------
+ * 分治思想，快排不会把真的数组分割开来再合并到一个新的数组中去，而是直接在原有数组的内部进行排序
+ */
+function quickSort(arr, left=0, right=arr.length-1){
+    // 定义递归边界，若数组只有一个元素，则没有排序的必要
+    if(arr.length > 1){
+        // 下一次划分左右子数组的索引位
+        const lineIndex = partition(arr, left, right);
+        // 如果左右子数组的长度不小于1，则递归这个子数组
+        if(left < lineIndex-1){
+            quickSort(arr, left, lineIndex-1)
+        }
+        // 如果右边子数组的长度不小于1，则递归这个子数组
+        if(lineIndex < right){
+            quickSort(arr, lineIndex, right)
+        }
+    }
+    return arr;
+}
+
+function partition(arr, left, right){
+    // 基准
+    let pivot = arr[Math.floor(left + (right - left) / 2)];
+    let i = left;
+    let j = right;
+    // 当左右指针不越界时，循环执行以下逻辑
+    while(i<=j){
+        // 左指针所指元素小于基准值，则右移左指针
+        while(arr[i] < pivot) i++;
+        while(arr[j] > pivot) j--;
+        // 若i<=j 交互左右两测
+        if(i<=j){
+            [arr[i], arr[j]] = [arr[j], arr[i]]
+            i++;
+            j--;
+        }
+    }
+    return i;
+}
+
+console.log(quickSort([5, 1, 3, 6, 2, 0, 7]))
 
 
 /**
@@ -1589,3 +1745,4 @@ var kthLargest = function (root, k) {
     }
     return root.val;
 };
+
