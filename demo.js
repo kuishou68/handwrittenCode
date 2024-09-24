@@ -93,42 +93,103 @@ Function.prototype.MyRace = function(promises){
     })
 }
 
-
-function quickSort(arr, left=0, right=arr.length-1){
-    // 定义递归边界，若数组只有一个元素，则没有排序的必要
-    if(arr.length > 1){
-        // 下一次划分左右子数组的索引位
-        const lineIndex = partition(arr, left, right);
-        // 如果左右子数组的长度不小于1，则递归这个子数组
-        if(left < lineIndex-1){
-            quickSort(arr, left, lineIndex-1)
-        }
-        // 如果右边子数组的长度不小于1，则递归这个子数组
-        if(lineIndex < right){
-            quickSort(arr, lineIndex, right)
-        }
+// 二面
+class EventEmitter {
+    constructor() {
+        this.events = {};
     }
-    return arr;
+    on(eventName, fn){
+        if(!this.events[eventName]){
+            this.events[eventName] = []
+            return;
+        }
+        if(!fn){
+            return;
+        }
+        this.events[eventName].push(fn)
+    }
+    emit(eventName, ...args){
+        if(!this.events[eventName]){
+            return;
+        }
+        this.events[eventName].forEach((item) => item(...args));
+    }
+    off(eventName, fn){
+        if(!this.events[eventName]){
+            this.events[eventName] = []
+            return;
+        }
+        if(!fn){
+            return;
+        }
+        this.events[eventName] = this.events[eventName].filter((item) => item !== fn);
+    }
 }
 
-function partition(arr, left, right){
-    // 基准
-    let pivot = arr[Math.floor(left + (right - left) / 2)];
-    let i = left;
-    let j = right;
-    // 当左右指针不越界时，循环执行以下逻辑
-    while(i<=j){
-        // 左指针所指元素小于基准值，则右移左指针
-        while(arr[i] < pivot) i++;
-        while(arr[j] > pivot) j--;
-        // 若i<=j 交互左右两测
-        if(i<=j){
-            [arr[i], arr[j]] = [arr[j], arr[i]];
-            i++;
-            j--;
+let a = new EventEmitter();
+function aa(x) {
+    console.log(x);
+}
+a.on("kak", aa)
+a.on("kak", (data) => {
+    console.log("1", data);
+})
+a.emit('kak', 'hahahah');
+a.off('kak',aa);
+a.emit('kak', 'hahahah');
+
+
+// 样例输入：s = "3[a2[c[3d]]]"
+// 样例输出：accaccacc
+
+function test(str){
+    // let rep = ''
+    let match = str.match(/^(\d+)\[(\w+)\[(\w+)\]\]$/);
+    // debugger;
+    console.log(match)
+    let res = [];
+    if(match && match.length>0){
+        for(let i = 1; i < match.length; i++){
+            let obj = {};
+            let splitArr = match[i].split('');
+            obj = {
+                item: match[i],
+                // nums: typeof match[i].split('')[0] === 'number' ? match[i].split('')[0] : typeof match[i].split('')[1] === 'number' ? match[i].split('')[1],
+                // str: match[i].split('')[1]
+            }
+            if(splitArr && splitArr.length > 1 ){
+                obj.str = (/^\d+$/).test(splitArr[0]) ? splitArr[0] : 0;
+                obj.nums = typeof splitArr[1] === 'string' ? splitArr[1] : "";
+            }
+            if(splitArr && splitArr.length === 1){
+                obj.nums = typeof splitArr[0] === 'number' ? splitArr[0] : 0;
+                obj.str = ""
+            }
+            res.push(obj);
         }
     }
-    return i;
+    console.log(res);
+    // debugger;
+    if(res && res.length > 0){
+        let newStr = "";
+        for(let j = 0; j < res.length; j++){
+            if(res[j].nums){
+                newStr = `${res[j].str}`
+                for(let k = 0; k < res[j].nums; k++){
+                    newStr = `${newStr}`
+                }
+            }
+        }
+        console.log("newStr", newStr)
+        debugger;
+    }
 }
-// debugger;
-console.log(quickSort([5, 1, 3, 6, 2, 0, 7]))
+
+
+console.log(test("3[a2[c]]"));
+
+
+
+
+
+

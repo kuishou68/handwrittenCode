@@ -39,7 +39,6 @@ const throttle = (func, wait=50) => {
     }
 }
 
-
 /**
  * -------------------------------------------发布订阅模式-------------------------------------------
  */
@@ -366,19 +365,20 @@ Function.prototype.myApply = function(context=window, args){
     fBound.prototype = Object.create(this.prototype);
     return fBound;
 }*/
-Function.prototype.myBind = function(context=window, ...args){
-    let self = this;
-    // 返回一个新的函数
-    let fBound = function(...innerArgs){
-        // 做构造函数，this指向实例，返回原函数上的所有属性和方法
-        // 做普通函数，this指向window，
-        return self.apply(this instanceof fBound ? this : context, args.concat(innerArgs))
-    }
-    // 新的函数需要包含原函数上的属性和方法
-    fBound.prototype = Object.create(this.prototype)
-    return fBound;
-}
 
+
+
+Function.prototype.myBind1 = function(context=window, ...args){
+    let self = this;
+    let fnBound = function(...innerArgs){
+        // 做构造函数使用，this指向实例，包含原函数所有属性和方法
+        // 做普通函数使用，this指向windows
+        return self.apply(this instanceof fnBound ? this : context, args.concat(innerArgs))
+    }
+    // 新函数需要包含原函数所有属性和方法
+    fnBound.prototype = Object.create(this.prototype);
+    return fnBound;
+}
 
 // 测试
 var obj = {
@@ -1057,7 +1057,7 @@ function bubbleSort(arr) {
                 flag = true;
             }
         }
-        // 若日一次交互没有发生，则说明数组有序，直接返回
+        // 若日一次交换也没有发生，则说明数组有序，直接返回
         if(!flag) return arr;
     }
     return arr;
@@ -1088,9 +1088,10 @@ function selectSort(arr){
     return arr;
 }
 
+
 /**
  * -------------------------------------------插入排序-------------------------------------------
- * 前面的元素序列都是有序的，每次向右移动发下比自己大的，就需要为当前元素腾出一个新的位置
+ * 前面的元素序列都是有序的，每次向右移动发现比自己大的，就需要为当前元素腾出一个新的位置
  * 时间复杂度  O(n^2)
  */
 function insetSort(arr){
@@ -1100,9 +1101,8 @@ function insetSort(arr){
         // 寻找自己应该有的定位
         let j = i;
         temp = arr[i];
-        // j前面一个元素是否比temp大
+        // j前面一个元素比temp大时，将该元素后移一位，为temp让出位置
         while(j > 0 && arr[j-1] > temp){
-            // 如果是，则将j前面的一个元素后移一位，为temp让出位置
             arr[j] = arr[j-1]
             j--
         }
@@ -1111,7 +1111,6 @@ function insetSort(arr){
     }
     return arr;
 }
-
 
 /**
  * https://interview.poetries.top/algorithm/algorithm-interview/20-%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E4%B8%93%E9%A2%98%EF%BC%88%E4%B8%8B%EF%BC%89.html#%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F
@@ -1153,10 +1152,41 @@ function mergeArr(leftArr, rightArr){
     }
 }
 
+function mergeSort(arr){
+    let len = arr.length;
+    if(len <= 1) return arr;
+    let mid = Math.floor(len/2); // 切割点
+    let leftArr = mergeSort(arr.slice(0, mid)); // 递归分割左子数组
+    let rightArr = mergeSort(arr.slice(mid, len)); // 递归分割右子数组
+    return mergeArr(leftArr, rightArr);
+}
+
+function mergeArr(leftArr, rightArr){
+    let res = [];
+    let i=0, j=0;
+    let leftLen = leftArr.length;
+    let rightLen = rightArr.length;
+    while(i < leftArr && j < rightArr){
+        if(leftArr[i] < rightArr[j]){
+            res.push(leftArr[i])
+            i++;
+        } else {
+            res.push(rightArr[j]);
+            j++;
+        }
+    }
+    // 如果其中一个子数组被合并完，则直接拼接到另一个子数组剩余部分
+    if(i < leftLen){
+        return res.concat(leftArr.slice(i));
+    } else {
+        return res.concat(rightArr.slice(j));
+    }
+}
 
 /**
  * -------------------------------------------快速排序-------------------------------------------
  * 分治思想，快排不会把真的数组分割开来再合并到一个新的数组中去，而是直接在原有数组的内部进行排序
+ * 1、从数列中挑选一个基准，所有要比基准小的放前面，大的放后面，递归这个过程；
  */
 function quickSort(arr, left=0, right=arr.length-1){
     // 定义递归边界，若数组只有一个元素，则没有排序的必要
@@ -1192,7 +1222,43 @@ function partition(arr, left, right){
             j--;
         }
     }
+    // 返回左指针索引，作为下一次划分左右子数组的依据
     return i;
+}
+
+
+// -------------------------------------------快速排序 另一实现方式-------------------------------------------
+function quickSort(arr, left, right) {
+    var len = arr.length,
+        partitionIndex,
+        left = typeof left != 'number' ? 0 : left,
+        right = typeof right != 'number' ? len - 1 : right;
+
+    if (left < right) {
+        partitionIndex = partition(arr, left, right);
+        quickSort(arr, left, partitionIndex-1);
+        quickSort(arr, partitionIndex+1, right);
+    }
+    return arr;
+}
+
+function partition(arr, left ,right) {     // 分区操作
+    var pivot = left,                      // 设定基准值（pivot）
+        index = pivot + 1;
+    for (var i = index; i <= right; i++) {
+        if (arr[i] < arr[pivot]) {
+            swap(arr, i, index);
+            index++;
+        }
+    }
+    swap(arr, pivot, index - 1);
+    return index-1;
+}
+
+function swap(arr, i, j) {
+    var temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
 }
 
 console.log(quickSort([5, 1, 3, 6, 2, 0, 7]))
@@ -1746,3 +1812,50 @@ var kthLargest = function (root, k) {
     return root.val;
 };
 
+/**
+ * -------------------------------------------柯里化-------------------------------------------
+ * @param fn
+ * @param args
+ * @returns {*}
+ */
+function curry(fn, ...args) {
+    return fn.length <= args.length ? fn(...args) : curry.bind(null, fn, ...args);
+}
+
+
+/**
+ * -------------------------------------------深拷贝-------------------------------------------
+ * @param object
+ * @returns {*[]|{}}
+ */
+function deepClone(object){
+    if(!object || typeof object !== 'object') return;
+    let newObject = Array.isArray(object) ? [] : {};
+    for(let key of object){
+        if(object.hasOwnProperty(key)){
+            newObject[key] = typeof object[key] === 'object' ? deepClone(object[key]) : object[key];
+        }
+    }
+    return newObject;
+}
+
+
+/**
+ * -------------------------------------------数字千位符用逗号隔开-------------------------------------------
+ * @param number
+ * @returns {string|string}
+ */
+function formatNumberWithCommas(number){
+    // 数字转字符
+    const numberString = String(number);
+    // 检查是否有小数部分
+    const [integer, decimal] = numberString.split('.');
+    // 将整数部分没三位加一个逗号
+    const integerWitchCommas = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // 如果有小数部分，则拼接整数部分和小数部分
+    return decimal ? `${integerWitchCommas}.${decimal}` : integerWitchCommas;
+}
+
+// 示例
+console.log(formatNumberWithCommas(123456789)); // 输出：123,456,789
+console.log(formatNumberWithCommas(1234.5678)); // 输出：1,234.5678
