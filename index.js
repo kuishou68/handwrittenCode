@@ -2005,11 +2005,9 @@ function numberOfPairs(nums1, nums2, k){
  * 示例 2：
  * 输入：nums = [2,2,1,1,1,2,2]
  * 输出：2
- * /
-/**
- * @param {number[]} nums
- * @return {number}
- */
+ * */
+
+// 暴力破解
 var majorityElement = function(nums) {
     let len = nums.length;
     if(!len){ return len;}
@@ -2026,7 +2024,7 @@ var majorityElement = function(nums) {
     }
 };
 
-/*
+// 优化写法
 const majorityElement = nums => {
     let count = 1;
     let majority = nums[0];
@@ -2042,4 +2040,4 @@ const majorityElement = nums => {
     }
     return majority;
 };
-*/
+
