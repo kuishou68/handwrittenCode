@@ -1337,6 +1337,16 @@ var threeSum = function(nums) {
     return ans;
 };
 
+var threeSum  =function(nums) {
+    let res = [];
+    let len = nums.length;
+    if(len < 3) return res;
+    nums.sort((a,b) => a-b);
+    for(let i = 0; i < len; i++){
+        if(nums[i] > 0) break;
+        if(i > 0 && nums[i] === nums[i-1])
+    }
+}
 
 /**
  * -------------------------------------------四数之和-------------------------------------------
@@ -1798,6 +1808,8 @@ var findTargetNode = function(root, cnt) {
     return res.sort((a, b) => b-a).filter((item, index) => { return index+1 == cnt; })
 };
 
+
+
 var kthLargest = function (root, k) {
     const stk = [];
     while (root !== null || stk.length) {
@@ -1856,6 +1868,178 @@ function formatNumberWithCommas(number){
     return decimal ? `${integerWitchCommas}.${decimal}` : integerWitchCommas;
 }
 
+
 // 示例
 console.log(formatNumberWithCommas(123456789)); // 输出：123,456,789
 console.log(formatNumberWithCommas(1234.5678)); // 输出：1,234.5678
+
+
+/**
+ * -------------------------------------------爬楼梯 climb Stairs-------------------------------------------
+ *
+ * 假设你正在爬楼梯。需要 n 阶你才能到达楼顶。每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+ *
+ *  示例 1：
+ * 输入：n = 2
+ * 输出：2
+ * 解释：有两种方法可以爬到楼顶。
+ * 1. 1 阶 + 1 阶
+ * 2. 2 阶
+ *
+ * 示例 2：
+ * 输入：n = 3
+ * 输出：3
+ * 解释：有三种方法可以爬到楼顶。
+ * 1. 1 阶 + 1 阶 + 1 阶
+ * 2. 1 阶 + 2 阶
+ * 3. 2 阶 + 1 阶
+ */
+function climbStairs(n) {
+    const  dp = [];
+    dp[0] = 1;
+    dp[1] = 1;
+    for(let i = 2; i <= n; i++){
+        dp[i] = dp[i-1] +dp[i-2];
+    }
+    return dp[n];
+}
+
+/**
+ * -------------------------------------------最小花费爬楼梯-------------------------------------------
+ * 数组的每个下标作为一个阶梯，第 i 个阶梯对应着一个非负数的体力花费值 cost[i]（下标从 0 开始）。
+ *
+ * 每当爬上一个阶梯都要花费对应的体力值，一旦支付了相应的体力值，就可以选择向上爬一个阶梯或者爬两个阶梯。
+ *
+ * 请找出达到楼层顶部的最低花费。在开始时，你可以选择从下标为 0 或 1 的元素作为初始阶梯。
+ *
+ *
+ *
+ * 示例 1：
+ *
+ * 输入：cost = [10, 15, 20]
+ * 输出：15
+ * 解释：最低花费是从 cost[1] 开始，然后走两步即可到阶梯顶，一共花费 15 。
+ *  示例 2：
+ *
+ * 输入：cost = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1]
+ * 输出：6
+ * 解释：最低花费方式是从 cost[0] 开始，逐个经过那些 1 ，跳过 cost[3] ，一共花费 6 。
+ */
+function spendClimbStairs(cost){
+    let dp = [];
+    let len = cost.length;
+    dp[0] = cost[0];
+    dp[1] = cost[1];
+    for(let i = 2; i < len; i++){
+        dp[i] = Math.min(dp[i-1], dp[i-2]) + cost[i];
+    }
+    return Math.min(dp[len-1], dp[len-2])
+}
+
+
+/**
+ * -------------------------------------------优质数对的总数-------------------------------------------
+ * 给你两个整数数组 nums1 和 nums2，长度分别为 n 和 m。同时给你一个正整数 k。
+ * 如果 nums1[i] 可以被 nums2[j] * k 整除，则称数对 (i, j) 为 优质数对（0 <= i <= n - 1, 0 <= j <= m - 1）。
+ * 返回 优质数对 的总数。
+ *
+ * 示例 1：
+ * 输入：nums1 = [1,3,4], nums2 = [1,3,4], k = 1
+ * 输出：5
+ * 解释：
+ * 5个优质数对分别是 (0, 0), (1, 0), (1, 1), (2, 0), 和 (2, 2)。
+ *
+ * 示例 2：
+ * 输入：nums1 = [1,2,4,12], nums2 = [2,4], k = 3
+ * 输出：2
+ * 解释：
+ * 2个优质数对分别是 (3, 0) 和 (3, 1)。
+ *
+ */
+function numberOfPairs(nums1, nums2, k){
+    // let len1 = nums1.length;
+    // let len2 = nums2.length;
+    // let res = [];
+    // // let map = new Map();
+    // for(let i = 0; i < len1; i++){
+    //     for(let j = 0; j < len2; j++){
+    //         let divisible = nums1[i] % (nums2[j] * k);
+    //         console.log("divisible", divisible);
+    //         if(divisible === 0){
+    //             res.push({i, j});
+    //         }
+    //     }
+    // }
+    // console.log("res", res);
+    // return res.length;
+
+    const count = {};
+    const count2 = {};
+    let res = 0, max1 = 0;
+    for (let num of nums1) {
+        count[num] = (count[num] || 0) + 1;
+        max1 = Math.max(max1, num);
+    }
+    for (let num of nums2) {
+        count2[num] = (count2[num] || 0) + 1;
+    }
+    for (let a in count2) {
+        let cnt = count2[a];
+        for (let b = a * k; b <= max1; b += a * k) {
+            if (b in count) {
+                res += count[b] * cnt;
+            }
+        }
+    }
+    return res;
+}
+
+/**
+ * -------------------------------------------多数元素-------------------------------------------
+ * 给定一个大小为 n 的数组 nums ，返回其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
+ *
+ * 示例 1：
+ * 输入：nums = [3,2,3]
+ * 输出：3
+ *
+ * 示例 2：
+ * 输入：nums = [2,2,1,1,1,2,2]
+ * 输出：2
+ * /
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var majorityElement = function(nums) {
+    let len = nums.length;
+    if(!len){ return len;}
+    for(let i=0;i<len;i++){
+        let count = 0;
+        for(let j=i;j<len;j++){
+            if(nums[i] === nums[j]){
+                count++;
+            }
+        }
+        if(count > len/2){
+            return nums[i];
+        }
+    }
+};
+
+/*
+const majorityElement = nums => {
+    let count = 1;
+    let majority = nums[0];
+    for (let i = 1; i < nums.length; i++) {
+        if (count === 0) {
+            majority = nums[i];
+        }
+        if (nums[i] === majority) {
+            count++;
+        } else {
+            count--;
+        }
+    }
+    return majority;
+};
+*/
