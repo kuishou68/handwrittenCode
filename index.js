@@ -2099,9 +2099,12 @@ var isHappy = function(n) {
 };
 
 /**
- * -------------------------------------------面试真题-------------------------------------------
- * 输入： 3[a2[c]]   "3[a2[c[2d[e]]]]"
- * 输出: acc acc acc  acdedecdede acdedecdede acdedecdede
+ * -------------------------------------------食亨 面试真题-------------------------------------------
+ * 输入： 3[a2[c]]
+ * 输出: acc acc acc
+ *
+ * 输入：3[a2[c[2d[e]]]]
+ * 输出: acdedecdede acdedecdede acdedecdede
  * @param str
  */
 const decodeString = (str) => {
@@ -2122,6 +2125,94 @@ const decodeString = (str) => {
 }
 
 
+/**
+ * -------------------------------------------移除链表元素-------------------------------------------
+ * 给你一个链表的头节点 head 和一个整数 val ，请你删除链表中所有满足 Node.val == val 的节点，并返回 新的头节点 。
+ *
+ * 示例 1：
+ *  输入：head = [1,2,6,3,4,5,6], val = 6
+ *  输出：[1,2,3,4,5]
+ *
+ *
+ * 示例 2：
+ *  输入：head = [], val = 1
+ *  输出：[]
+ *
+ *
+ * 示例 3：
+ *  输入：head = [7,7,7,7], val = 7
+ *  输出：[]
+ *
+ * 提示：
+ *  列表中的节点数目在范围 [0, 10⁴] 内
+ *  1 <= Node.val <= 50
+ *  0 <= val <= 50
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} val
+ * @return {ListNode}
+ */
+var removeElements = function(head, val) {
+    if(head == null){ return head;}
+    head.next = removeElements(head.next, val);
+    return head.val === val ? head.next : head;
+};
 
 
+
+/**
+ * -------------------------------------------同构字符串-------------------------------------------
+ * 给定两个字符串 s 和 t ，判断它们是否是同构的。
+ * 如果 s 中的字符可以按某种映射关系替换得到 t ，那么这两个字符串是同构的。
+ * 每个出现的字符都应当映射到另一个字符，同时不改变字符的顺序。不同字符不能映射到同一个字符上，相同字符只能映射到同一个字符上，字符可以映射到自己本身。
+ *
+ *  示例 1:
+ *   输入：s = "egg", t = "add"
+ *   输出：true
+ *
+ *
+ *  示例 2：
+ *   输入：s = "foo", t = "bar"
+ *   输出：false
+ *
+ *  示例 3：
+ *   输入：s = "paper", t = "title"
+ *   输出：true
+ *
+ *  示例 4：
+ *   输入：s = "bbbaaaba", t = "aaabbbba"
+ *   输出：false
+ *
+ *  提示：
+ *  1 <= s.length <= 5 * 10⁴
+ *  t.length == s.length
+ *  s 和 t 由任意有效的 ASCII 字符组成
+ *
+ *
+ */
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var isIsomorphic = function(s, t) {
+    if(s.length !== t.length){ return false; }
+    let sObj = {};
+    let tObj = {};
+    for(let i = 0; i < s.length; i++){
+        // 两个字符串遍历的当前项
+        const x = s[i], y = t[i];
+        // 只要存在一项不满足交换，返回false
+        if((sObj[x] && sObj[x] !== y) || (tObj[y] && tObj[y] !== x)){
+            return false;
+        }
+        // s的当前项做key, t的当前项做val
+        sObj[x] = y;
+        tObj[y] = x;
+    }
+    return true;
+};
+
+//leetcode submit region end(Prohibit modification and deletion)
 
