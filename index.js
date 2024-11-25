@@ -2098,7 +2098,28 @@ var isHappy = function(n) {
     }
 };
 
-
+/**
+ * -------------------------------------------面试真题-------------------------------------------
+ * 输入： 3[a2[c]]   "3[a2[c[2d[e]]]]"
+ * 输出: acc acc acc  acdedecdede acdedecdede acdedecdede
+ * @param str
+ */
+const decodeString = (str) => {
+    let strDecode = "";
+    let strArr = String(str).split('').filter((fItem) => {
+        return ![']', '['].includes(fItem);
+    }).reverse();
+    console.log("strArr", strArr); // ['c', '2', 'a', '3']
+    (strArr||[]).map((item) => {
+        if(/^\d+$/.test(item)){
+            strDecode = Array(Number(item) + 1).join(strDecode);
+        } else {
+            strDecode = `${item}${strDecode}`;
+        }
+    })
+    console.log("strDecode", strDecode);
+    return strDecode;
+}
 
 
 
