@@ -2313,7 +2313,7 @@ var containsNearbyDuplicate = function(nums, k) {
  * 
  *  进阶：你能够不使用循环/递归解决此问题吗？
  * 
- */
+ **/
 /**
  * @param {number} n
  * @return {boolean}
@@ -2326,8 +2326,64 @@ var isPowerOfTwo = function(n) {
 
 
 
+/**
+ * ------------------------------------------- 检查棋盘相同颜色方格 -------------------------------------------
+ * 
+ * 给你两个字符串 coordinate1 和 coordinate2，代表 8 x 8 国际象棋棋盘上的两个方格的坐标。
+ *  如果这两个方格颜色相同，返回 true，否则返回 false。
+ *  坐标总是表示有效的棋盘方格。坐标的格式总是先字母（表示列），再数字（表示行）。
+ * 
+ *  示例 1：
+ *  输入： coordinate1 = "a1", coordinate2 = "c3"
+ *  输出： true
+ * 
+ *  解释：
+ *  两个方格均为黑色。
+ * 
+ *  示例 2：
+ *  输入： coordinate1 = "a1", coordinate2 = "h3"
+ *  输出： false
+ * 
+ *  解释：
+ *  方格 "a1" 是黑色，而 "h3" 是白色。
+ * 
+ *  提示：
+ *  coordinate1.length == coordinate2.length == 2
+ *  'a' <= coordinate1[0], coordinate2[0] <= 'h' 
+ *  '1' <= coordinate1[1], coordinate2[1] <= '8'
+ *  Related Topics 数学 字符串 👍 21 👎 0
+ **/
+/**
+ * @param {string} coordinate1
+ * @param {string} coordinate2
+ * @return {boolean}
+ */
+var checkTwoChessboards = function(coordinate1, coordinate2) {
+    let coordinateMap = {};
+    let letterArr = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    for(let i = 0;i <=8; i++){
+        for(let j = 0; j <=8; j++){
+            coordinateMap[`${letterArr[j]}${i+1}`] = (i+j)%2 === 0;
+        } 
+    }
+    return coordinateMap[coordinate1] === coordinateMap[coordinate2];
+};
 
 
-
-
+/**
+ * 
+ * @param {*} coordinate1 
+ * @param {*} coordinate2 
+ * @returns 
+ */
+var checkTwoChessboards = function(coordinate1, coordinate2) {
+    // 行列差值之间的和为偶数，说明颜色相同;
+    // return ((coordinate1.charCodeAt(0) - coordinate2.charCodeAt(0)) + (coordinate1.charCodeAt(1) - coordinate2.charCodeAt(1))) % 2 === 0;
+    // 行差值
+    let rowDiff = coordinate1.charCodeAt(1) - coordinate2.charCodeAt(1);
+    // 列差值
+    let columnsDiff = coordinate1.charCodeAt(0) - coordinate12.charCodeAt(0);
+    // 如果行列差之和为偶数，则颜色相同
+    return ((rowDiff + columnsDiff) % 2)=== 0;
+};
 
