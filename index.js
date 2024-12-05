@@ -2346,18 +2346,19 @@ var isPowerOfTwo = function(n) {
  * 
  *  解释：
  *  方格 "a1" 是黑色，而 "h3" 是白色。
- * 
- *  提示：
- *  coordinate1.length == coordinate2.length == 2
- *  'a' <= coordinate1[0], coordinate2[0] <= 'h' 
- *  '1' <= coordinate1[1], coordinate2[1] <= '8'
- *  Related Topics 数学 字符串 👍 21 👎 0
  **/
 /**
- * @param {string} coordinate1
- * @param {string} coordinate2
- * @return {boolean}
+ * 
+ * @param {*} coordinate1 
+ * @param {*} coordinate2 
+ * @returns 
  */
+var checkTwoChessboards = function(coordinate1, coordinate2) {
+    // 行列差值之间的和为偶数，说明颜色相同;
+    return ((coordinate1.charCodeAt(0) - coordinate2.charCodeAt(0)) + (coordinate1.charCodeAt(1) - coordinate2.charCodeAt(1))) % 2 === 0;
+};
+
+// 枚举写法
 var checkTwoChessboards = function(coordinate1, coordinate2) {
     let coordinateMap = {};
     let letterArr = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
@@ -2371,19 +2372,42 @@ var checkTwoChessboards = function(coordinate1, coordinate2) {
 
 
 /**
+ *  ------------------------------------------- 有效的字母异位词 -------------------------------------------
+ * 给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的 字母异位词。
  * 
- * @param {*} coordinate1 
- * @param {*} coordinate2 
- * @returns 
+ *  示例 1:
+ * 输入: s = "anagram", t = "nagaram"
+ * 输出: true
+ * 
+ * 
+ *  示例 2:
+ * 输入: s = "rat", t = "car"
+ * 输出: false
+ * 
+ *  提示:
+ *  1 <= s.length, t.length <= 5 * 10⁴
+ *  s 和 t 仅包含小写字母
+ * 
+ *  进阶: 如果输入字符串包含 unicode 字符怎么办？你能否调整你的解法来应对这种情况？
+ *  Related Topics 哈希表 字符串 排序 👍 959 👎 0
  */
-var checkTwoChessboards = function(coordinate1, coordinate2) {
-    // 行列差值之间的和为偶数，说明颜色相同;
-    // return ((coordinate1.charCodeAt(0) - coordinate2.charCodeAt(0)) + (coordinate1.charCodeAt(1) - coordinate2.charCodeAt(1))) % 2 === 0;
-    // 行差值
-    let rowDiff = coordinate1.charCodeAt(1) - coordinate2.charCodeAt(1);
-    // 列差值
-    let columnsDiff = coordinate1.charCodeAt(0) - coordinate12.charCodeAt(0);
-    // 如果行列差之和为偶数，则颜色相同
-    return ((rowDiff + columnsDiff) % 2)=== 0;
-};
 
+
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var isAnagram = function(s, t) {
+    // let sArr = s.split("").sort();
+    // let tArr = t.split("").sort();
+    // let flag = true;
+    // if(sArr.length !== tArr.length){ return false; }
+    // for(let i = 0 ; i < sArr.length; i++){
+    //     if(tArr[i] !== sArr[i]){
+    //         flag = false;
+    //     }
+    // }
+    // return flag;
+    return s.length == t.length && [...s].sort().join('') === [...t].sort().join('')
+};
