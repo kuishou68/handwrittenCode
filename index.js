@@ -2394,23 +2394,29 @@ var checkTwoChessboards = function(coordinate1, coordinate2) {
 
 
 /**
+ * 循环
  * @param {string} s
  * @param {string} t
  * @return {boolean}
  */
 var isAnagram = function(s, t) {
-    // let sArr = s.split("").sort();
-    // let tArr = t.split("").sort();
-    // let flag = true;
-    // if(sArr.length !== tArr.length){ return false; }
-    // for(let i = 0 ; i < sArr.length; i++){
-    //     if(tArr[i] !== sArr[i]){
-    //         flag = false;
-    //     }
-    // }
-    // return flag;
+    let sArr = s.split("").sort();
+    let tArr = t.split("").sort();
+    let flag = true;
+    if(sArr.length !== tArr.length){ return false; }
+    for(let i = 0 ; i < sArr.length; i++){
+        if(tArr[i] !== sArr[i]){
+            flag = false;
+        }
+    }
+    return flag;
+};
+
+// 一行代码
+var isAnagram = function(s, t) {
     return s.length == t.length && [...s].sort().join('') === [...t].sort().join('')
 };
+
 
 
 /**
@@ -2436,6 +2442,7 @@ var isAnagram = function(s, t) {
  */
 
 /**
+ * 每一位相加
  * @param {number} num
  * @return {number}
  */
@@ -2446,7 +2453,11 @@ var addDigits = function(num) {
     }, 0);
     return sum >= 10 ? addDigits(sum) : sum;
 };
+
+
 /**
+ *  ------------------------------------------- 各位数相加（ 一行代码解法） -------------------------------------------
+ * 
  * 比如 num=678，计算过程为
  * 
  * 678⟶6+7+8=21⟶2+1=3
@@ -2481,7 +2492,7 @@ var addDigits = function(num) {
 
 
 /**
- * ------------------------------------------- 丑数 -------------------------------------------
+ * ------------------------------------------- 丑数 I -------------------------------------------
  *【丑数】就是只包含质因数 2、3 和 5 的 正 整数。
 
  * 给你一个整数 n ，请你判断 n 是否为 丑数 。如果是，返回 true ；否则，返回 false 。
@@ -2519,3 +2530,48 @@ var addDigits = function(num) {
     while(n % 5 === 0){ n = n / 5; }
     return n === 1;
  };
+
+
+ /**
+  * ------------------------------------------- 丑数 II -------------------------------------------
+  * 给你一个整数 n ，请你找出并返回第 n 个 丑数 。
+  * 
+  * 丑数 就是质因子只包含 2、3 和 5 的正整数。
+  * 
+  * 示例 1：
+  * 输入：n = 10
+  * 输出：12
+  * 解释：[1, 2, 3, 4, 5, 6, 8, 9, 10, 12] 是由前 10 个丑数组成的序列。
+  * 
+  * 示例 2：
+  * 输入：n = 1
+  * 输出：1
+  * 解释：1 通常被视为丑数。
+  * 
+  * 
+  * 1 <= n <= 1690
+  * Related Topics
+  * 哈希表
+  * 数学
+  * 动态规划
+  * 堆（优先队列）
+  */
+ var nthUglyNumber = function(n) {
+    if(!n){ return n; }
+    let res = [1]; // 创建一个长度为n的数组来保存丑数序列，初始化第一个丑数为1
+    let i2 = 0, i3 = 0, i5 = 0; // 定义三个指针，分别指向需要乘以2, 3, 5的位置
+    for(let i = 1; i < n; i++) {
+        let r2 = res[i2] * 2;
+        let r3 = res[i3] * 3;
+        let r5 = res[i5] * 5;
+        // 计算下一个丑数，取最小值
+        let nextUgly = Math.min(r2, r3, r5);
+        res.push(nextUgly);
+        // 更新指针，避免重复计算相同的丑数
+        if (nextUgly === r2) { i2++; }
+        if (nextUgly === r3) { i3++; }
+        if (nextUgly === r5) { i5++; }
+    }
+    // 返回第n个丑数
+    return res[n-1];
+};
