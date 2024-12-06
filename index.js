@@ -2506,6 +2506,16 @@ var addDigits = function(num) {
  * Related Topics
  * 数学
  */
+
+/**
+ * 思路：首先除2，直到不能整除为止，然后除5到不能整除为止，然后除3直到不能整除为止。最终判断剩余的数字是否为1，如果是1则为丑数，否则不是丑数。
+ * @param {*} n 
+ * @returns 
+ */
  var isUgly = function(n) {
-    
+    if(!n) { return false; }
+    while(n % 2 === 0){ n = n / 2; }
+    while(n % 3 === 0){ n = n / 3; }
+    while(n % 5 === 0){ n = n / 5; }
+    return n === 1;
  };
