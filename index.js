@@ -2805,7 +2805,8 @@ var wordPattern = function(pattern, s) {
  *  拿掉最后一块石头的人就是获胜者。 
  *  
  * 
- *  假设你们每一步都是最优解。请编写一个函数，来判断你是否可以在给定石头数量为 n 的情况下赢得游戏。如果可以赢，返回 true；否则，返回 false 。 
+ *  假设你们每一步都是最优解。请编写一个函数，来判断你是否可以在给定石头数量为 n 的情况下赢得游戏。
+ * 如果可以赢，返回 true；否则，返回 false 。 
  * 
  *  示例 1： 
  * 输入：n = 4
@@ -2837,6 +2838,55 @@ var wordPattern = function(pattern, s) {
  */
 var canWinNim = function(n) {
     return n % 4 !== 0;
+};
+
+
+/**
+ * ------------------------------------------- 反转字符串中的元音字母 -------------------------------------------
+ * 给你一个字符串 s ，仅反转字符串中的所有元音字母，并返回结果字符串。 
+ * 
+ *  元音字母包括 'a'、'e'、'i'、'o'、'u'，且可能以大小写两种形式出现不止一次。 
+ * 
+ *  
+ * 
+ *  示例 1： 
+ *  输入：s = "IceCreAm" 
+ *  输出："AceCreIm" 
+ *  解释： 
+ *  s 中的元音是 ['I', 'e', 'e', 'A']。反转这些元音，s 变为 "AceCreIm". 
+ * 
+ *  示例 2： 
+ *  输入：s = "leetcode" 
+ *  输出："leotcede" 
+ * 
+ *  提示： 
+ *  1 <= s.length <= 3 * 10⁵ 
+ *  s 由 可打印的 ASCII 字符组成 
+ *  
+ *  Related Topics 双指针 字符串 👍 365 👎 0
+ **/
+
+/**
+ * @param {string} s
+ * @return {string}
+ */
+var reverseVowels = function(s) {
+    let ans = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
+    let sArr = [...s];
+    let len = s.length;
+    let l=0, r=len-1;
+    while(l < r){
+        while(l < len && !ans.includes(sArr[l])){ l++; }
+        while(r > 0 && !ans.includes(sArr[r])){ r--; }
+        if(l < r){
+            let swap = sArr[l];
+            sArr[l] = sArr[r];
+            sArr[r] = swap;
+            l++;
+            r--;
+        }
+    }
+    return sArr.join('');
 };
 
 
