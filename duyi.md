@@ -209,5 +209,61 @@ const str = "aaaaaaaaaa"
 - `n*` 匹配任何包含0个或多个n的字符集
 - `n?` 匹配任何包含0个或一个n的字符集
 - `n{X}` 匹配包含X个n的系列的字符 
-- `n{x, y}` 匹配包含 `/\w{3,5/g` 
+- `n{X, Y}` 匹配包含X至Y序列的字符串  `/\w{3,5/g` 
+- `n{X, }` 匹配包含至少X个n序列的字符串
+- `n$` 匹配任何结尾为n的字符串
+- `^n` 匹配任何开始为n的字符串
+- `?=n` 匹配任何其后紧接指定字符串n的字符串 `正先行断言`
+- `?!n` 匹配任何其后没有紧接指定字符串n的字符串  `负先行断言`
+- `?<=` 匹配 其前跟随着断言中定义的格式。 `正后发断言` 例如，表达式 (?<=(T|t)he\s)(fat|mat) 匹配 fat 和 mat，且其前跟着 The 或 the。
+- `?<!` 匹配 其前不跟随着断言中定义的格式。`负后发断言` 例如，表达式 (?<!(T|t)he\s)(cat) 匹配 cat，且其前不跟着 The 或 the。
+
+
+参考：https://www.cnblogs.com/ranxi169/p/16556257.html
+
+````js
+// 输入：the-first-name 输出：theFirstName
+const reg = /-(\w)/g;
+const str = "the-first-name";
+str.replace(reg, function($, $1){
+    return $1.toUpperCase();
+})
+
+/**
+ * 例如：abaaaa 
+ * 正向预查 匹配 b前面的a；
+ * 正向断言 匹配 b后面的aaaa
+ */
+// 正向预查 匹配 b前面的a；
+const reg = /a(?=b)/g;
+const str = "abaaaa";
+str.match(reg); // ['a']
+// 正向断言 匹配b后面的aaaa
+const reg = /a(?!b)/g;
+const str = "abaaaa";
+str.match(reg); // ['a', 'a', 'a', 'a']
+
+
+/**
+ * 字符串去重
+ * 输入：aaaaaaaabbbbbbbbccccccc
+ * 输出：abc
+ * 
+ */
+const str = "aaaaaaaabbbbbbbbccccccc";
+const reg = /(\w)\1*/g;
+console.log(str.replace(reg, "$1")); // abc
+
+
+/**
+ * 获取所有包含 . 并且前面是 $ 的数字
+ * 希望从下面的输入字符串 $4.44 和 $10.88 中获得所有以 $ 字符开头的数字
+ */
+const reg = /(?<=\$)[0-9\.]*/g;
+const str = "$10.88";
+str.match(reg); //
+
+````
+
+
 
