@@ -2631,31 +2631,31 @@ var isUgly = function(n) {
 };
 
 
-/**
- * ------------------------------------------- 丑数 II -------------------------------------------
- * 给你一个整数 n ，请你找出并返回第 n 个 丑数 。
- *
- * 丑数 就是质因子只包含 2、3 和 5 的正整数。
- *
- * 示例 1：
- * 输入：n = 10
- * 输出：12
- * 解释：[1, 2, 3, 4, 5, 6, 8, 9, 10, 12] 是由前 10 个丑数组成的序列。
- *
- * 示例 2：
- * 输入：n = 1
- * 输出：1
- * 解释：1 通常被视为丑数。
- *
- *
- * 1 <= n <= 1690
- * Related Topics
- * 哈希表
- * 数学
- * 动态规划
- * 堆（优先队列）
- */
-var nthUglyNumber = function(n) {
+ /**
+  * ------------------------------------------- 丑数 II -------------------------------------------
+  * 给你一个整数 n ，请你找出并返回第 n 个 丑数 。
+  *
+  * 丑数 就是质因子只包含 2、3 和 5 的正整数。
+  *
+  * 示例 1：
+  * 输入：n = 10
+  * 输出：12
+  * 解释：[1, 2, 3, 4, 5, 6, 8, 9, 10, 12] 是由前 10 个丑数组成的序列。
+  *
+  * 示例 2：
+  * 输入：n = 1
+  * 输出：1
+  * 解释：1 通常被视为丑数。
+  *
+  *
+  * 1 <= n <= 1690
+  * Related Topics
+  * 哈希表
+  * 数学
+  * 动态规划
+  * 堆（优先队列）
+  */
+ var nthUglyNumber = function(n) {
     if(!n){ return n; }
     let res = [1]; // 创建一个长度为n的数组来保存丑数序列，初始化第一个丑数为1
     let i2 = 0, i3 = 0, i5 = 0; // 定义三个指针，分别指向需要乘以2, 3, 5的位置
@@ -3487,16 +3487,16 @@ solve(input3);
 
 /**
  * ------------------------------------------- 分糖果 -------------------------------------------
- * 排排坐，分糖果。 
- * 我们买了一些糖果 candies，打算把它们分给排好队的 n = num_people 个小朋友。 
- * 给第一个小朋友 1 颗糖果，第二个小朋友 2 颗，依此类推，直到给最后一个小朋友 n 颗糖果。 
- * 然后，我们再回到队伍的起点，给第一个小朋友 n + 1 颗糖果，第二个小朋友 n + 2 颗，依此类推，直到给最后一个小朋友 2 * n 颗糖果。 
+ * 排排坐，分糖果。
+ * 我们买了一些糖果 candies，打算把它们分给排好队的 n = num_people 个小朋友。
+ * 给第一个小朋友 1 颗糖果，第二个小朋友 2 颗，依此类推，直到给最后一个小朋友 n 颗糖果。
+ * 然后，我们再回到队伍的起点，给第一个小朋友 n + 1 颗糖果，第二个小朋友 n + 2 颗，依此类推，直到给最后一个小朋友 2 * n 颗糖果。
  * 重复上述过程（每次都比上一次多给出一颗糖果，当到达队伍终点后再次从队伍起点开始），直到我们分完所有的糖果。注意，就算我们手中的剩下糖果数不够（不比前一次发
- * 出的糖果多），这些糖果也会全部发给当前的小朋友。 
- * 
+ * 出的糖果多），这些糖果也会全部发给当前的小朋友。
+ *
  * 返回一个长度为 num_people、元素之和为 candies 的数组，以表示糖果的最终分发情况（即 ans[i] 表示第 i 个小朋友分到的糖果数）。
- * 
- * 示例 1： 
+ *
+ * 示例 1：
  * 输入：candies = 7, num_people = 4
  * 输出：[1,2,3,1]
  * 解释：
@@ -3504,8 +3504,8 @@ solve(input3);
  * 第二次，ans[1] += 2，数组变为 [1,2,0,0]。
  * 第三次，ans[2] += 3，数组变为 [1,2,3,0]。
  * 第四次，ans[3] += 1（因为此时只剩下 1 颗糖果），最终数组变为 [1,2,3,1]。
- * 
- * 示例 2： 
+ *
+ * 示例 2：
  * 输入：candies = 10, num_people = 3
  * 输出：[5,2,3]
  * 解释：
@@ -3513,7 +3513,7 @@ solve(input3);
  * 第二次，ans[1] += 2，数组变为 [1,2,0]。
  * 第三次，ans[2] += 3，数组变为 [1,2,3]。
  * 第四次，ans[0] += 4，最终数组变为 [5,2,3]。
- * 
+ *
  * @param {number} candies
  * @param {number} num_people
  * @return {number[]}
@@ -3529,7 +3529,7 @@ var distributeCandies = function(candies, num_people) {
     return ans;
 };
 
-var distrbuteCandies = 
+var distrbuteCandies =
 
 
 
@@ -3566,3 +3566,540 @@ var [a,b] = {
 }
 
 console.log(a, b); // 正确输出 : 10 foo
+
+
+
+/**
+ * ------------------------------------------- 多多的数字组合 -------------------------------------------
+ * 我最近在研究某种数字组合：
+ * 定义为：每个数字的十进制表示中(0~9)，每个数位各不相同且各个数位之和等于N。
+ * 满足条件的数字可能很多，找到其中的最小值即可。
+ *
+ * 数据范围：1 ≤  n ≤ 1000 1≤n≤1000
+ * 进阶：空间复杂度 O(1) O(1)  ，时间复杂度 O(n) O(n)
+ * 时间限制：C/C++ 1秒，其他语言2秒
+ * 空间限制：C/C++ 256M，其他语言512M
+ *
+ * 输入描述：
+ * 共一行，一个正整数N，如题意所示，表示组合中数字不同数位之和。
+ * （1 <= N <= 1,000）
+ * 输出描述：
+ * 共一行，一个整数，表示该组合中的最小值。
+ * 如果组合中没有任何符合条件的数字，那么输出-1即可。
+ *
+ * 示例1
+ * 输入例子： 5
+ * 输出例子： 5
+ * 例子说明：
+ * 符合条件的数字有：5，14，23，32，41
+ * 其中最小值为5
+ *
+ * 示例2
+ * 输入例子： 12
+ * 输出例子： 39
+ *
+ * 示例3
+ * 输入例子： 50
+ * 输出例子： -1
+ * 例子说明：
+ * 没有符合条件的数字 (Ｔ▽Ｔ)
+ */
+function findMinNumber(n) {
+    if (n > 45) return -1;
+
+    for (let m = 1; m <= 9; m++) {
+        let maxSum = 0;
+        for (let i = 0; i < m; i++) {
+            maxSum += (9 - i);
+        }
+        const minSum = (m * (m - 1)) / 2;
+        if (n < minSum || n > maxSum) continue;
+
+        let available = new Set();
+        for (let i = 0; i <= 9; i++) available.add(i);
+        let digits = [];
+        let sumRemaining = n;
+        let possible = true;
+
+        for (let i = 0; i < m; i++) {
+            const start = i === 0 ? 1 : 0;
+            let found = false;
+
+            for (let d = start; d <= 9; d++) {
+                if (!available.has(d)) continue;
+                if (d > sumRemaining) break;
+
+                const remainingDigits = m - i - 1;
+                if (remainingDigits === 0) {
+                    if (d === sumRemaining) {
+                        digits.push(d);
+                        available.delete(d);
+                        sumRemaining -= d;
+                        found = true;
+                        break;
+                    }
+                    continue;
+                }
+
+                const s = sumRemaining - d;
+                const remainingAvailable = new Set(available);
+                remainingAvailable.delete(d);
+
+                const sortedDesc = Array.from(remainingAvailable).sort((a, b) => b - a);
+                let maxSumRemaining = 0;
+                for (let j = 0; j < remainingDigits; j++) {
+                    if (j >= sortedDesc.length) break;
+                    maxSumRemaining += sortedDesc[j];
+                }
+
+                const sortedAsc = Array.from(remainingAvailable).sort((a, b) => a - b);
+                let minSumRemaining = 0;
+                for (let j = 0; j < remainingDigits; j++) {
+                    if (j >= sortedAsc.length) break;
+                    minSumRemaining += sortedAsc[j];
+                }
+
+                if (s >= minSumRemaining && s <= maxSumRemaining) {
+                    digits.push(d);
+                    available.delete(d);
+                    sumRemaining -= d;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                possible = false;
+                break;
+            }
+        }
+
+        if (possible) {
+            return parseInt(digits.join(''), 10);
+        }
+    }
+
+    return -1;
+}
+
+// 测试示例
+console.log(findMinNumber(5));  // 输出: 5
+console.log(findMinNumber(12)); // 输出: 39
+console.log(findMinNumber(50)); // 输出: -1
+
+/**
+ * ------------------------------------------- 多多的字符变换 -------------------------------------------
+ * 我最近在研究字符串之间的变换，可以对字符串进行若干次变换操作:
+ *
+ * 交换任意两个相邻的字符，代价为0。
+ * 将任意一个字符a修改成字符b，代价为 |a - b|（绝对值）。
+ * 现在有两个长度相同的字符串X和Y，我想知道，如果要将X和Y变成两个一样的字符串，需要的最少的代价之和是多少。
+ *
+ * 时间限制：C/C++ 1秒，其他语言2秒
+ * 空间限制：C/C++ 256M，其他语言512M
+ * 输入描述：
+ * 共三行，第一行，一个整数N，表示字符串的长度。
+ * （1 <= N <= 2,000）
+ * 接下来两行，每行分别是一个字符串，表示字符串X和Y。
+ * （字符串中仅包含小写字母）
+ * 输出描述：
+ * 共一行，一个整数，表示将X和Y变换成一样的字符串需要的最小的总代价。
+ *
+ * 示例1
+ * 输入例子： 4 abca abcd
+ * 输出例子： 3
+ * 例子说明：
+ * 其中一种代价最小的变换方案：
+ * 都修改为abcd，那么将第一个字符串X最后一个字符a修改为d，代价为|a - d| = 3。
+ *
+ * 示例2
+ * 输入例子： 4 baaa aabb
+ * 输出例子： 1
+ * 例子说明：
+ * 其中一种代价最小的变换方案：
+ * 首先将第一个字符串通过交换相邻的字符：baaa -> abaa -> aaba，代价为0。
+ * 然后将第二个字符串修改最后一个字符b：|b - a| = 1。
+ * 两个字符都修改为aaba，所以最小的总代价为1。
+ *
+ * 示例3
+ * 输入例子： 3 abc xyz
+ * 输出例子： 69
+ */
+function solve(input) {
+    const lines = input.trim().split('\n');
+    const n = parseInt(lines[0].trim());
+    const X = lines[1].trim();
+    const Y = lines[2].trim();
+
+    // 将字符转换为数字（a -> 0, b -> 1, ...）
+    const arrX = X.split('').map(ch => ch.charCodeAt(0) - 97);
+    const arrY = Y.split('').map(ch => ch.charCodeAt(0) - 97);
+
+    // 对两个数组排序
+    arrX.sort((a, b) => a - b);
+    arrY.sort((a, b) => a - b);
+
+    // 计算每一位的修改代价
+    let cost = 0;
+    for (let i = 0; i < n; i++) {
+        cost += Math.abs(arrX[i] - arrY[i]);
+    }
+
+    console.log(cost);
+}
+
+// 示例测试
+const input1 = `4 abca abcd`;
+solve(input1); // 输出: 3
+
+const input2 = `4 baaa aabb`;
+solve(input2); // 输出: 1
+
+const input3 = `3 abc xyz`;
+solve(input3); // 输出: 69
+
+
+/**
+ * ------------------------------------------- 多多的求和计算 -------------------------------------------
+ * 路上从左到右有N棵树（编号1～N），其中第i个颗树有和谐值Ai。
+ * 我认为，如果一段连续的树，它们的和谐值之和可以被M整除，那么这个区间整体看起来就是和谐的。
+ * 想请你帮忙计算一下，满足和谐条件的区间的数量。
+ *
+ * 时间限制：C/C++ 1秒，其他语言2秒
+ * 空间限制：C/C++ 256M，其他语言512M
+ * 输入描述：
+ * 第一行，有2个整数N和M，表示树的数量以及计算和谐值的参数。
+ * （ 1 <= N <= 100,000, 1 <= M <= 100  ）
+ * 第二行，有N个整数Ai, 分别表示第i个颗树的和谐值。
+ * （ 0 <= Ai <= 1,000,000,000 ）
+ * 输出描述：
+ * 共1行，每行1个整数，表示满足整体是和谐的区间的数量。
+ *
+ * 示例1
+ * 输入例子：
+ * 5 2
+ * 1 2 3 4 5
+ * 输出例子： 6
+ * 例子说明：
+ * 长度为1: [2], [4]
+ * 长度为2: 无
+ * 长度为3: [1,2,3], [3,4,5]
+ * 长度为4: [1,2,3,4], [2,3,4,5]
+ * 长度为5: 无
+ * 共6个区间的和谐值之和可以被2整除。
+ */
+function solve(input) {
+    const lines = input.trim().split('\n');
+    const [n, m] = lines[0].trim().split(/\s+/).map(Number);
+    const arr = lines[1].trim().split(/\s+/).map(Number);
+
+    // freq[r] 表示前缀和 mod M 等于 r 的次数
+    const freq = new Array(m).fill(0);
+    freq[0] = 1; // S[0] = 0
+
+    let prefix = 0, ans = 0;
+    for (let i = 0; i < n; i++) {
+        prefix = (prefix + arr[i]) % m;
+        // 累加之前遇到过相同余数的次数，这些都可以构成合法区间
+        ans += freq[prefix];
+        // 更新当前余数的计数
+        freq[prefix]++;
+    }
+
+    console.log(ans);
+}
+
+// 示例测试
+const input1 = `5 2
+1 2 3 4 5`;
+solve(input1);  // 输出：6
+
+
+
+/**
+ * ------------------------------------------- 多多的骰子组合 -------------------------------------------
+ * 有N个骰子，为了方便后面进行活动，需要将这些骰子进行分类。
+ *
+ * 两个骰子为同类的定义是： 1
+ * 将其中一个骰子通过若干次上下、左右或前后翻转后，其与另一个骰子对应的6面数字均相等。
+ *
+ * 现在想知道不同种类的骰子的数量分别有多少。
+ * 时间限制：C/C++ 2秒，其他语言4秒
+ * 空间限制：C/C++ 256M，其他语言512M
+ * 输入描述：
+ * 第一行1个整数N，表示骰子的数量。
+ * （1 <= N <= 1,000）
+ * 接下来N行，每行6个数字（1～6，且各不相同）
+ * 其中第i行表示第i个骰子当前上、下、左、右、前、后这6面的数字。
+ * 输出描述：
+ * 共2行:
+ * 第一行1个整数M，表示不同种类的骰子的个数
+ * 第二行M个整数，由大到小排序，表示每个种类的骰子的数量
+ *
+ * 示例1
+ * 输入例子：
+ * 2
+ * 1 2 3 4 5 6
+ * 1 2 6 5 3 4
+ * 输出例子：
+ * 1
+ * 2
+ * 例子说明：
+ * 第二个骰子相当于是第一个骰子从左向右旋转了一面得到，属于同类。
+ *
+ * 示例2
+ * 输入例子：
+ * 3
+ * 1 2 3 4 5 6
+ * 1 2 6 5 3 4
+ * 1 2 3 4 6 5
+ * 输出例子：
+ * 2
+ * 2 1
+ * 例子说明：
+ * 第三个骰子无法通过任何旋转变换成第一个或第二个骰子。
+ *
+ * 示例3
+ * 输入例子：
+ * 10
+ * 2 5 1 3 4 6
+ * 5 4 3 2 1 6
+ * 1 4 6 2 3 5
+ * 1 5 6 3 4 2
+ * 6 4 2 1 5 3
+ * 3 6 4 5 2 1
+ * 1 6 3 4 2 5
+ * 5 1 4 2 6 3
+ * 6 2 3 1 5 4
+ * 5 3 6 1 4 2
+ * 输出例子：
+ * 9
+ * 2 1 1 1 1 1 1 1 1
+ * 例子说明：
+ * 只有第4个骰子(1 5 6 3 4 2)与第8个骰子(5 1 4 2 6 3)属于同一类。
+ *
+ * 一种可能的变换方式:
+ * ① 首先从右向左翻转1次 (1 5 6 3 4 2) -> (1 5 4 2 3 6)
+ * ② 然后从上向下翻转2次 (1 5 4 2 3 6) -> (6 3 4 2 1 5) -> (5 1 4 2 6 3)
+ */
+// 模拟旋转操作：骰子数组顺序：[上, 下, 左, 右, 前, 后]
+
+// 向前翻转：上->前，前->下，下->后，后->上
+function rollNorth(d) {
+    return [d[4], d[5], d[2], d[3], d[1], d[0]];
+}
+
+// 向右翻转：上->左，左->下，下->右，右->上
+function rollEast(d) {
+    return [d[2], d[3], d[1], d[0], d[4], d[5]];
+}
+
+// 垂直轴顺时针旋转：上、下不变；左,前,右,后顺时针循环：左←后，后←右，右←前，前←左
+function rotateClockwise(d) {
+    return [d[0], d[1], d[5], d[4], d[2], d[3]];
+}
+
+// 枚举 24 个朝向
+function getOrientations(dice) {
+    let orientations = [];
+    let seen = new Set();
+
+    function add(ori) {
+        const key = ori.join(',');
+        if (!seen.has(key)) {
+            seen.add(key);
+            orientations.push(ori);
+        }
+    }
+
+    let curr = dice.slice();
+    for (let i = 0; i < 6; i++) {
+        let tmp = curr.slice();
+        for (let j = 0; j < 4; j++) {
+            add(tmp);
+            tmp = rotateClockwise(tmp);
+        }
+        // 改变顶面：
+        // 交替使用 rollEast 和 rollNorth 可以让不同面上来
+        if (i % 2 === 0) {
+            curr = rollEast(curr);
+        } else {
+            curr = rollNorth(curr);
+        }
+    }
+    return orientations;
+}
+
+// 计算骰子的规范表示（24 个旋转表示中按字符串排序最小的那个）
+function canonical(dice) {
+    const oris = getOrientations(dice);
+    const reps = oris.map(ori => ori.join(''));
+    reps.sort();
+    return reps[0];
+}
+
+// 主函数，input 为输入字符串
+function solve(input) {
+    const lines = input.trim().split('\n');
+    const n = parseInt(lines[0].trim());
+
+    // 用 Map 存储：规范表示 -> 数量
+    const group = new Map();
+
+    for (let i = 1; i <= n; i++) {
+        const parts = lines[i].trim().split(/\s+/).map(Number);
+        // parts 顺序为 [上, 下, 左, 右, 前, 后]
+        const key = canonical(parts);
+        group.set(key, (group.get(key) || 0) + 1);
+    }
+
+    // 每一类的个数
+    const counts = Array.from(group.values());
+    // 输出时要求按降序排列
+    counts.sort((a, b) => b - a);
+
+    console.log(group.size);
+    console.log(counts.join(' '));
+}
+
+// -----
+// 以下为示例测试
+
+// 示例1
+const input1 = `2
+1 2 3 4 5 6
+1 2 6 5 3 4`;
+solve(input1);
+// 输出：
+// 1
+// 2
+
+// 示例2
+const input2 = `3
+1 2 3 4 5 6
+1 2 6 5 3 4
+1 2 3 4 6 5`;
+solve(input2);
+// 输出：
+// 2
+// 2 1
+
+// 示例3
+const input3 = `10
+2 5 1 3 4 6
+5 4 3 2 1 6
+1 4 6 2 3 5
+1 5 6 3 4 2
+6 4 2 1 5 3
+3 6 4 5 2 1
+1 6 3 4 2 5
+5 1 4 2 6 3
+6 2 3 1 5 4
+5 3 6 1 4 2`;
+solve(input3);
+// 输出（可能）：
+// 9
+// 2 1 1 1 1 1 1 1 1
+
+/**
+ * ------------------------------------------- 对象解构 -------------------------------------------
+ * 实现对一个对象进行解构 ,类数组解构；
+ * 前提：不能改变对象，不能改变a, b取值方式
+ * 提示：可以从原型出发
+ */
+
+// 解法1：通过在对象原型添加 Symbol.iterator 方法，使其成为一个可迭代对象，将原型上的每一个值变成可枚举
+Object.pertotype[Symbol.iterator] = function(){
+    return Object.values(this)[Symbol.iterator]();
+}
+
+// 解法2：使用生成器函数（function*）来依次返回对象的属性值。
+Object.prototype[Symbol.iterator] = function* (){
+    for(let i of Object.values(this)){
+        console.log(i)
+        yield this[i]
+    }
+}
+
+var [a,b] = {
+    a: 10,
+    b: "foo"
+}
+
+console.log(a, b); // 正确输出 : 10 foo
+
+
+/**
+ *
+ * @param data
+ * 输入：S = "5F3Z-2e-9-w", k = 4 输出："5F3Z-2E9W"
+ * 输入：S = "2-5g-3-J", k = 2 输出："2-5G-3J"
+ * 输入：S = "2-4A0r7-4k", k = 4 输出："24A0-R74K"
+ * 输入：S = "2-4A0r7-4k", k = 3 输出："24-A0R-74K"
+ */
+var licenseKeyFormatting = function(s, k) {
+    /**
+     * 思路：遍历分组后的s，如果当前项长度跟k相等，则重组成功，
+     * 长度不够的，从后面的项中补，至少满足每项有一个字符，
+     * 重组过程中，如果长度超过了k，则单独一项，
+     * 所有字符转为大写
+     */
+    let resStr = "";
+    let sArr = s.split("-").map((item) => {
+        return isNaN(item) ? item.toLocaleUpperCase() : item;
+    });
+// console.log(sArr);
+    for(let i = 0; i < sArr.length; i++){
+        if(sArr[i].length < k){
+// 判断当前字符段中是否含字母
+            let flag = sArr[i].split("").some((e) => { return isNaN(e)})
+// console.log("flag", flag);
+            if(flag){
+                resStr = resStr + sArr[i];
+
+            } else {
+                resStr = resStr + sArr[i];
+// console.log(resStr.split("")[resStr.length-1])
+                if(resStr.split("")[resStr.length-1].length === k){
+                    resStr = resStr + '-';
+                }
+            }
+        } else if(sArr[i].length == k){
+            console.log("resStr + sArr[i]", resStr + sArr[i]);
+            if((resStr + sArr[i]).length < k){
+                resStr = resStr + sArr[i] + '-'
+            } else if(sArr[i].length == k) {
+                console.log(resStr);
+                if(resStr !== ""){
+                    resStr = resStr + '-' + sArr[i] + '-';
+                } else {
+                    resStr = resStr + sArr[i] + '-';
+                }
+            }
+        } else if(sArr[i].length > k){
+// 多退少补
+            let lastStr = resStr.split("-")[resStr.length-1]||''; // 上一项未匹配完成字符
+            console.log("lastStr", lastStr);
+            let supplementNum = k - lastStr.length; // 需要补充的数量
+            for(let j = 0; j <= sArr[i].length; j++){
+// console.log("resStr", resStr);
+                if(j <= supplementNum){
+                    if(lastStr.length === k){
+                        resStr = resStr + '-'
+                    }
+                    if(lastStr.length < k){
+                        resStr = resStr + sArr[i][j];
+                    }
+                    if(resStr.length === k){
+                        resStr = resStr + "-";
+                    }
+                } else if(sArr[i][j]){
+                    resStr = resStr + sArr[i][j]
+                }
+            }
+
+        }
+        console.log("resStr", resStr);
+    }
+    return resStr;
+}

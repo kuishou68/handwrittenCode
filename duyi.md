@@ -264,6 +264,60 @@ const str = "$10.88";
 str.match(reg); //
 
 ````
+### 对象
+- 属性描述符
+````js
+const user = {
+    name: 'monica',
+  age: 17
+}
+// 获取属性描述符
+const des = Object.getOwnPropertyDescriptor(user, 'name')
+console.log(des);
 
+// 输出：
+// {
+//   "value": "monica",
+//   "writable": true,
+//   "enumerable": true, // 可枚举
+//   "configurable": true
+// }
 
+// 修改属性描述符
+Object.defineProperty(user, 'name', {
+   "value": "张三",
+  "writable": true,
+  "enumerable": true,
+  "configurable": true
+})
 
+// 赋值obj除a以外所有的属性到一个新的对象
+const obj = {
+    a: 1,
+    b: 2,
+    c: 3
+}
+
+const { a, ...newObj } = obj;
+console.log(newObj);
+````
+
+### 函数
+````js
+const getData = ({page=1, limit=10, keyword=''}={}) => {
+  console.log(`${page}-${limit}-${keyword}`);
+}
+getData()
+getData({
+  page: 2
+})
+getData({
+  page: 2,
+  limit: 30
+})
+getData({
+  keyword: 'js'
+})
+````
+
+### 事件循环

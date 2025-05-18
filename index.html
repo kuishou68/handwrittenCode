@@ -6,92 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <script>
-        class EventEmiter {
-            constructor(){
-                this.events = {};
-            }
-            on(eventName, fn){
-                if(!this.events[eventName]){
-                    this.events[eventName] = [];
-                }
-                this.events[eventName].push(fn);
-            }
-            off(eventName, fn){
-                if(!this.events[eventName]){
-                    return;
-                }
-                if(!fn){
-                    this.events[eventName] = undefined;
-                    return;
-                }
-                this.events[eventName] = this.events[eventName].filter((item) =>  item !== fn )
-            }
-            emit(eventName, ...args){
-                // 没有订阅，直接return
-                if(!this.events[eventName]){
-                    return;
-                }
-                // 开始发布消息
-                this.events[eventName].forEach((item) => item(...args))
-            }
-        }
 
-        const eventEmitter = new EventEmiter();
-        const event1Listener = (a, b) => {
-            console.log(`event1：a=${a}, b=${b}`);
-        }
+<script >
 
-        const event2Listener = () => {
-            console.log("event2");
-        }
+</script>
 
-        const event3Listener = () => {
-            console.log("event3");
-        }
-
-        eventEmitter.on('event1', event1Listener);
-        eventEmitter.on('event2', event2Listener);
-
-
-        eventEmitter.emit('event1', 1, 2); // 输出 ”event1: a=1, b=2
-        eventEmitter.emit('event2'); // 输出 ”event2
-
-
-        eventEmitter.on('event2', event3Listener);
-        eventEmitter.emit('event2'); // 输出 ”event2 和 event3
-
-
-        eventEmitter.off('event1', event1Listener);
-        eventEmitter.emit('event1'); // 不输出任何内容
-
-        console.log(eventEmitter);
-
-
-
-        // const person = new EventEmiter();
-
-        // person.on('abc', handel3)
-        // person.on('abc', handel1)
-        // person.on('abc', handel2)
-
-        // person.off('abc', handel2);
-        // person.emit('abc');
-        // console.log(person);
-
-        // function handel1(){
-        //     console.log("handle1");
-        // }
-
-        // function handel2(){
-        //     console.log("handle2");
-        // }
-
-        // function handel3(){
-        //     console.log("handle3");
-        // }
-
-
-    </script>
 </body>
 </html>
