@@ -4028,78 +4028,32 @@ var [a,b] = {
 
 console.log(a, b); // 正确输出 : 10 foo
 
-
 /**
+ * ------------------------------------------- 密钥格式化 -------------------------------------------
  *
- * @param data
+ * 给定一个许可密钥字符串 s，仅由字母、数字字符和破折号组成。字符串由 n 个破折号分成 n + 1 组。你也会得到一个整数 k 。
+ * 我们想要重新格式化字符串 s，使每一组包含 k 个字符，除了第一组，它可以比 k 短，但仍然必须包含至少一个字符。
+ * 此外，两组之间必须插入破折号，并且应该将所有小写字母转换为大写字母。
+ *
  * 输入：S = "5F3Z-2e-9-w", k = 4 输出："5F3Z-2E9W"
  * 输入：S = "2-5g-3-J", k = 2 输出："2-5G-3J"
  * 输入：S = "2-4A0r7-4k", k = 4 输出："24A0-R74K"
  * 输入：S = "2-4A0r7-4k", k = 3 输出："24-A0R-74K"
  */
 var licenseKeyFormatting = function(s, k) {
-    /**
-     * 思路：遍历分组后的s，如果当前项长度跟k相等，则重组成功，
-     * 长度不够的，从后面的项中补，至少满足每项有一个字符，
-     * 重组过程中，如果长度超过了k，则单独一项，
-     * 所有字符转为大写
-     */
-    let resStr = "";
-    let sArr = s.split("-").map((item) => {
-        return isNaN(item) ? item.toLocaleUpperCase() : item;
-    });
-// console.log(sArr);
-    for(let i = 0; i < sArr.length; i++){
-        if(sArr[i].length < k){
-// 判断当前字符段中是否含字母
-            let flag = sArr[i].split("").some((e) => { return isNaN(e)})
-// console.log("flag", flag);
-            if(flag){
-                resStr = resStr + sArr[i];
-
-            } else {
-                resStr = resStr + sArr[i];
-// console.log(resStr.split("")[resStr.length-1])
-                if(resStr.split("")[resStr.length-1].length === k){
-                    resStr = resStr + '-';
-                }
+    const res = [];
+    let count = 0;
+    for(let i = 0; i < s.length; i++){
+        if(s[i] !== '-'){
+            count++;
+            res.push(s[i].toUpperCase())
+            if(count % k === 0){
+                res.push("-");
             }
-        } else if(sArr[i].length == k){
-            console.log("resStr + sArr[i]", resStr + sArr[i]);
-            if((resStr + sArr[i]).length < k){
-                resStr = resStr + sArr[i] + '-'
-            } else if(sArr[i].length == k) {
-                console.log(resStr);
-                if(resStr !== ""){
-                    resStr = resStr + '-' + sArr[i] + '-';
-                } else {
-                    resStr = resStr + sArr[i] + '-';
-                }
-            }
-        } else if(sArr[i].length > k){
-// 多退少补
-            let lastStr = resStr.split("-")[resStr.length-1]||''; // 上一项未匹配完成字符
-            console.log("lastStr", lastStr);
-            let supplementNum = k - lastStr.length; // 需要补充的数量
-            for(let j = 0; j <= sArr[i].length; j++){
-// console.log("resStr", resStr);
-                if(j <= supplementNum){
-                    if(lastStr.length === k){
-                        resStr = resStr + '-'
-                    }
-                    if(lastStr.length < k){
-                        resStr = resStr + sArr[i][j];
-                    }
-                    if(resStr.length === k){
-                        resStr = resStr + "-";
-                    }
-                } else if(sArr[i][j]){
-                    resStr = resStr + sArr[i][j]
-                }
-            }
-
         }
-        console.log("resStr", resStr);
     }
-    return resStr;
+    if(res.length === 0 && res[res.length -1] === "-"){
+        res.pop()
+    }
+    return res.join("")
 }
